@@ -906,6 +906,9 @@ public class MainDriver {
 		int advancement = WeaponConfig.getData().get(name).getAdvancement();
 		log("You've hit full weapon charge and applied an effect of type: " + fullChargeType + " (t=" + fullChargeTime + ").");
 		switch (fullChargeType) {
+			case WeaponData.ELEMENT_ABER:
+				fullChargeTotal = 5;
+				break;
 			case WeaponData.ELEMENT_ICE:
 				fullChargeTotal = 6;
 				break;
