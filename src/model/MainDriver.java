@@ -1,13 +1,11 @@
 package model;
 import java.awt.*;
-import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.math.BigInteger;
 import java.util.*;
 import java.util.List;
 
@@ -57,27 +55,29 @@ public class MainDriver {
 	 * The coordinates are the values of the upper left / bottom right corners around the region to be viewed for a certain TrackPoint.
 	 */
 	public enum TrackPoint {
-		CLAUDIA("Claudia", "Buff duration", "claudia.png", 15, Resolution.ACTIVE_COOLDOWN, 0.99),
-		SHIRO("Shiro", "Full Bloom timer", "shiro.png", 45, Resolution.ACTIVE_COOLDOWN, 0.98),
-		NEMESIS("Nemesis", "Electrode gauge", "nemesis.png", 25, Resolution.ACTIVE_COOLDOWN, 0.99),
-		SAKI("Saki", "Estimated cooldown of Surge (starts on weapon swap), and skill reset counter", "saki.png", 30, Resolution.ACTIVE_COOLDOWN, 0.99),
-		TSUBASA("Tsubasa", "Buff timer (refreshes on dodge)", "tsubasa.png", 12, Resolution.ACTIVE_COOLDOWN, 0.99),
-		SAMIR("Samir", "", "samir.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
-		ZERO("Zero", "Shield duration", "zero.png", 30, Resolution.ACTIVE_COOLDOWN, 0.99),
-		RUBY("Ruby", "Estimated detonation timer", "ruby.png", 30, Resolution.ACTIVE_COOLDOWN, 0.991),
-		MERYL("Meryl", "Shield timer and cooldown", "meryl.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
+		CLAUDIA("Claudia", "Buff duration", "claudia.png", 15, Resolution.ACTIVE_SKILL, 0.99999),
+		SHIRO("Shiro", "Full Bloom timer", "shiro.png", 45, Resolution.ACTIVE_SKILL, 0.99),
+		NEMESIS("Nemesis", "Electrode gauge", "nemesis.png", 25, Resolution.ACTIVE_SKILL, 0.99),
+		SAKI("Saki", "Estimated cooldown of Surge (starts on weapon swap), and skill reset counter", "saki.png", 30, Resolution.ACTIVE_SKILL, 0.99),
+		TSUBASA("Tsubasa", "Buff timer (refreshes on dodge)", "tsubasa.png", 12, Resolution.ACTIVE_SKILL, 0.99),
+		SAMIR("Samir", "", "samir.png", 45, Resolution.ACTIVE_SKILL, 0.99),
+		ZERO("Zero", "Shield duration", "zero.png", 30, Resolution.ACTIVE_SKILL, 0.99),
+		RUBY("Ruby", "Estimated detonation timer", "ruby.png", 30, Resolution.ACTIVE_SKILL, 0.991),
+		MERYL("Meryl", "Shield timer and cooldown", "meryl.png", 45, Resolution.ACTIVE_SKILL, 0.99),
 
 		//wip need new sprite
-		COBALT("Cobalt", "Ionic scorch timer", "cobalt.png", 60, Resolution.ACTIVE_COOLDOWN, 0.99),
-		HUMA("Huma", "Sharp Axe timer", "huma.png", 25, Resolution.ACTIVE_COOLDOWN, 0.99),
-		COCO("Coco", "Healing Bee timer and A3 buff timer", "coco.png", 60, Resolution.ACTIVE_COOLDOWN, 0.99),
-		KING("King", "Flaming Scythe timer", "king.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
-		CROW("Crow", "Discharge timer", "crow.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
-		FRIGG("Frigg", "Ice Domain", "frigg.png", 45, Resolution.ACTIVE_COOLDOWN, 0.992),
-		LIN("Lin", "Moonlight Realm time and discharge count for A6", "lin.png", 30, Resolution.ACTIVE_COOLDOWN, 0.99),
+		COBALT("Cobalt", "Ionic scorch timer", "claudia.png", 60, Resolution.ACTIVE_SKILL, 0.99),
+		HUMA("Huma", "Sharp Axe timer", "huma.png", 25, Resolution.ACTIVE_SKILL, 0.99),
+		COCO("Coco", "Healing Bee timer and A3 buff timer", "coco.png", 60, Resolution.ACTIVE_SKILL, 0.99),
+		KING("King", "Flaming Scythe timer", "king.png", 45, Resolution.ACTIVE_SKILL, 0.99),
+		CROW("Crow", "Discharge timer", "crow.png", 45, Resolution.ACTIVE_SKILL, 0.99),
+		FRIGG("Frigg", "Ice Domain", "frigg.png", 45, Resolution.ACTIVE_SKILL, 0.992),
+		LIN("Lin", "Moonlight Realm time and discharge count for A6", "lin.png", 30, Resolution.ACTIVE_SKILL, 0.99),
+
 
 		WEAPON1("Weapon 1", "", Resolution.WEAPON_1),
 		WEAPON2("Weapon 2", "", Resolution.WEAPON_2),
+		WEAPON_CD("Current CD", "", Resolution.SKILL_COOLDOWN),
 
 		DODGE1("Dodge 1", "dodge.png", Resolution.DODGE1, 0.99),
 		DODGE2("Dodge 2", "dodge.png", Resolution.DODGE2, 0.99),
@@ -154,7 +154,7 @@ public class MainDriver {
 			return text;
 		}
 		public boolean isWeapon() {
-			return regionIndex == (Resolution.ACTIVE_COOLDOWN);
+			return regionIndex == (Resolution.ACTIVE_SKILL);
 		}
 
 		/**
@@ -351,6 +351,7 @@ public class MainDriver {
 
 		long lastTick = 0;
 		long currentTick;
+		OCR.reset();
 
         while(true) {
             long now = System.nanoTime();
@@ -406,6 +407,7 @@ public class MainDriver {
 		data.put(TrackPoint.DODGE2, new HitMissCollection());
 		data.put(TrackPoint.DODGE3, new HitMissCollection());
 		data.put(TrackPoint.DISCHARGE, new HitMissCollection());
+		data.put(TrackPoint.WEAPON_CD, new HitMissCollection());
 
     	trackPointByRegion = new TreeMap<>();
     	for (TrackPoint tp : data.keySet()) {
@@ -454,6 +456,8 @@ public class MainDriver {
 		currentWeaponTp = null;
 		lastActivity = 0;
 		dischargeCount = 0;
+		highestScore = 0;
+		scoreAdjustment = 1;
     }
     
     /**
@@ -541,6 +545,12 @@ public class MainDriver {
 	private static boolean hasDischarge = false;
 	private static boolean shielded = false;
 
+	/**
+	 * Sometimes, the parser will just... not be able to parse some images. This will "upscale" the highest score to .995.
+	 */
+	private static double highestScore = 0;
+	private static double scoreAdjustment = 1;
+
     public static void tick() {
     	if (!resolution.initialized()) {
     		resolution.initialize();
@@ -561,6 +571,7 @@ public class MainDriver {
 			}
         }
 		boolean found = false;
+
     	for (TrackPoint tp : data.keySet()) {
     		DataCollection dc = data.get(tp);
     		String image = tp.getImage();
@@ -596,9 +607,9 @@ public class MainDriver {
 		    			m = r.exists(tp.getSecondaryImage(), 0.01);
 		    		}
 	    		}
-				hit = m != null && m.getScore() >= tp.getThreshold();
+				hit = m != null && m.getScore() * scoreAdjustment >= tp.getThreshold();
 				if (hit && tp.isWeapon()) {
-					if (!weaponMap.containsKey(currentWeapon) && !reverseWeaponMap.containsKey(tp.getName())) {
+					if (currentWeapon != 0 && !weaponMap.containsKey(currentWeapon) && !reverseWeaponMap.containsKey(tp.getName())) {
 						weaponMap.put(currentWeapon, tp);
 						reverseWeaponMap.put(tp.getName(), currentWeapon);
 						weaponsFound++;
@@ -607,9 +618,22 @@ public class MainDriver {
 						found = true;
 					}
 				}
-				if (currentWeaponTp != null && currentWeaponTp.getName().equals(tp.getName()) && tp.isWeapon())
-				//if (tp.isWeapon() && tp.getName().equals("Lin") )
-					log(tp.getName()+": "+(m != null ? m.getScore() : "no match") +"; "+hit);
+				if (tp.isWeapon() && weaponsFound < 3) {
+					if (scoreAdjustment != 1)
+						logOnly(tp.getName() + ": " + (m != null ? m.getScore() : "no match") + "; " + hit + " (Adjusted: " +
+								(m != null ? m.getScore() * scoreAdjustment : "no match") + ")");
+					else
+						logOnly(tp.getName() + ": " + (m != null ? m.getScore() : "no match") + "; " + hit);
+					if (weaponsFound == 0 && m.getScore() > highestScore)
+						highestScore = m.getScore();
+				}
+				if (currentWeaponTp != null && currentWeaponTp.getName().equals(tp.getName()) && tp.isWeapon()) {
+					if (scoreAdjustment != 1)
+						log(tp.getName() + ": " + (m != null ? m.getScore() : "no match") + "; " + hit + " (Adjusted: " +
+								(m != null ? m.getScore() * scoreAdjustment : "no match") + ")");
+					else
+						log(tp.getName() + ": " + (m != null ? m.getScore() : "no match") + "; " + hit);
+				}
 				if (tp.getName().contains("Dodge") && hit) {
 					dodges++;
 				}
@@ -618,10 +642,10 @@ public class MainDriver {
 				}
 				if (tp.getName().contains("Discharge")) {
 					//System.out.println(tp.getName()+": "+(m != null ? m.getScore() : "no match") +"; "+hit +"; "+lastDischarge);
-					if (lastDischarge && !hit && m != null && m.getScore() <= 0.985) {
+					if (lastDischarge && !hit && m != null && m.getScore() * scoreAdjustment <= 0.985) {
 						handleFullCharge();
 					}
-					if (!hit && (m == null || m.getScore() <= 0.985))
+					if (!hit && (m == null || m.getScore() * scoreAdjustment <= 0.985))
 						lastDischarge = false;
 					else if (hit) {
 						lastDischarge = true;
@@ -631,7 +655,7 @@ public class MainDriver {
 				if (tp.getReq() != null) {
 	    	        Region r = regionMap.get(tp.getRegionIndex());
 					m = r.exists(tp.getReq(), 0.01);
-					if (m == null || m.getScore() < 0.999)
+					if (m == null || m.getScore() * scoreAdjustment < 0.999)
 						hit = false;
 				}
 				if (dc instanceof HitMissCollection) {
@@ -647,7 +671,7 @@ public class MainDriver {
 								if (!dc.isActive())
 									dc.setActive(true);
 								//System.out.println("We got a hit on " + currentWeaponTp.getName());
-								if (!hit && m.getScore() <= 0.97) {
+								if (!hit && m.getScore() * scoreAdjustment <= 0.97) {
 									((CountCollection) dc).handleHit(true, true);
 									lastActivity = System.currentTimeMillis();
 								} else
@@ -664,6 +688,10 @@ public class MainDriver {
     		} else if (tp.getRegion() != null) { //look for text
     			int[] region = tp.getRegion();
     	        Region r = new Region(region[0], region[1], region[2] - region[0], region[3] - region[1]);
+				if (tp.getName().equalsIgnoreCase("Current CD"))
+					OCR.globalOptions().variable("tessedit_char_whitelist", "0123456789");
+				else
+					OCR.globalOptions().variable("tessedit_char_whitelist", "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
     	        String[] text = r.text().split("\n");
 				if (text.length == 0)
 					continue;
@@ -690,22 +718,54 @@ public class MainDriver {
 						((HitMissCollection) dc).handleHit(true);
 					}
 				}
+				if (tp.getName().equalsIgnoreCase("Current CD") && currentWeaponTp != null) {
+					int cd = (int)(((CountCollection)data.get(currentWeaponTp)).getCooldown() / 1000.0);
+
+					int advancement = WeaponConfig.getData().get(currentWeaponTp.getName()).getAdvancement();
+						if (currentWeaponTp.getName().equals("Samir") && advancement >= 6 &&  cd > 0 && text[0].length() > 0) {
+							System.out.println("Parse CD: " + text[0] + "; Real: " + cd);
+							try {
+								int proposedCd = Integer.parseInt(text[0]);
+								if (proposedCd < cd && cd - proposedCd <= 8 && cd - proposedCd > 0) {
+									System.out.println("Advancing CD by " + (cd - proposedCd));
+									((CountCollection)data.get(currentWeaponTp)).advanceCooldown(cd - proposedCd);
+								}
+							} catch (Exception e) {
+								continue;
+							}
+						}
+				}
     		}
     	}
 		if (weaponsFound == 0) { //reset the config
 			log("Resetting the weapon config.");
 			TrackPoint.WEAPON1.reset();
 			TrackPoint.WEAPON2.reset();
+			if (!weaponObscured) {
+				scoreAdjustment = .995 / highestScore;
+				log("Highest score was " + highestScore + "; setting adjustment to " + scoreAdjustment);
+			}
 		}
 		if (lastDodge > dodges) {
 			handleDodge();
 		}
 		lastDodge = dodges;
+		if (reverseWeaponMap.containsKey("Cobalt") && WeaponConfig.getData().get("Cobalt").getAdvancement() >= 6) {
+			((CountCollection)(data.get(weaponMap.get(reverseWeaponMap.get("Cobalt"))))).handleCobaltA6(false);
+		}
     }
+
+	public static boolean isScoreAdjusted() {
+		return scoreAdjustment != 1;
+	}
 
 	public static void log(String s) {
 		logOutput.println(s);
 		System.out.println(s);
+	}
+
+	public static void logOnly(String s) {
+		logOutput.println(s);
 	}
 
 	public static long getFullChargeTime() {
@@ -860,9 +920,20 @@ public class MainDriver {
 		}
 
 		if (reverseWeaponMap.containsKey("Cobalt")) {
+			if (WeaponConfig.getData().get("Cobalt").getAdvancement() >= 6) {
+				new java.util.Timer().schedule(
+						new java.util.TimerTask() {
+							@Override
+							public void run() {
+								((CountCollection)(data.get(weaponMap.get(reverseWeaponMap.get("Cobalt"))))).handleCobaltA6(true);
+							}
+						},
+						500
+				);
+			}
 			double chargeDebuffTime = (System.currentTimeMillis() - fullChargeTime) / 1000.0;
 			boolean procCondition = WeaponConfig.getData().get("Cobalt").getAdvancement() >= 3 && name.equals("Cobalt");
-			boolean ionicBurning = ((CountCollection)data.get(currentWeaponTp)).getLastActive() <= 10000;
+			boolean ionicBurning = ((CountCollection)data.get(currentWeaponTp)).getLastActive() <= 10000 && ((CountCollection)data.get(currentWeaponTp)).getLastActive() > 0;
 			if ((fullChargeType == WeaponData.ELEMENT_FIRE && chargeDebuffTime < fullChargeTotal
 				&& procCondition) || (WeaponConfig.getData().get("Cobalt").getAdvancement() >= 5 && ionicBurning)) { //if enemy is burning
 				new java.util.Timer().schedule(

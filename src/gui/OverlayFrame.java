@@ -153,7 +153,7 @@ public class OverlayFrame extends AbstractFrame {
 	                	if (b.getImage().contains("pause")) {
 	                		MainDriver.pause();
 	                	}
-	                	if (b.getImage().contains("reset")) {
+	                	if (b.getImage().contains("reset") || b.getImage().contains("warning")) {
 	                		MainDriver.reset();
 	                	}
 	                	if (b.getImage().contains("minimize")) {

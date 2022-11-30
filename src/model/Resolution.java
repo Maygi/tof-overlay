@@ -19,7 +19,7 @@ public class Resolution {
 	 * The indexes of certain screen areas.
 	 */
 	public static final int SKILL_COOLDOWN = 0;
-	public static final int ACTIVE_COOLDOWN = 1;
+	public static final int ACTIVE_SKILL = 1;
 	public static final int ACTIVE_WEAPON = 2;
 	public static final int WEAPON_1 = 3;
 	public static final int WEAPON_2 = 4;
@@ -89,10 +89,12 @@ public class Resolution {
 		System.out.println("Region initialized.");
 		//x, y, x2, y2
 		baseRegion = new ArrayList<Integer[]>();
-		baseRegion.add(new Integer[]{(int) (screenSize.getWidth() * 0.85), (int) (screenSize.getHeight() * 0.85),
-				(int) (screenSize.getWidth()), (int) (screenSize.getHeight())});
 
 		//active cooldown
+		baseRegion.add(new Integer[]{(int) (screenSize.getWidth() * (2320.0 / 2560.0)), (int) (screenSize.getHeight() * (1295.0 / 1440.0)),
+				(int) (screenSize.getWidth() * ((2320.0 + 60) / 2560.0)), (int) (screenSize.getHeight() * ((1295.0 + 37) / 1440.0))});
+
+		//active weapon skill
 		baseRegion.add(new Integer[]{(int) (screenSize.getWidth() * (2300.0 / 2560.0)), (int) (screenSize.getHeight() * (1269.0 / 1440.0)),
 				(int) (screenSize.getWidth() * (2400.0 / 2560.0)), (int) (screenSize.getHeight() * (1373.0 / 1440.0))});
 

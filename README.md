@@ -26,6 +26,10 @@ To help calibrate your weapon setup, it's recommended to stand somewhere where t
 
 ![The weapon UI in-game](https://cdn.discordapp.com/attachments/549708292423811074/1047454158850117672/image.png)
 
+If you are standing in an overly bright area, there's a good chance you'll run into false positives (most commonly Ruby and Frigg). If you see the red warning triangle button, that means that the calibration is a bit shaky, and you should consider resetting.
+
+![When you see this, consider resetting!](https://cdn.discordapp.com/attachments/549708292423811074/1047643392949108816/image.png)
+
 *Not working?*
 
 Scroll to the bottom for some common mistakes that people make~
@@ -41,7 +45,7 @@ Scroll to the bottom for some common mistakes that people make~
 ![Volt](https://cdn.discordapp.com/attachments/549708292423811074/1047449490610720848/electrocute.png)
 * Nemesis - keeps track of Electrodes - added through Skill (A1+) or Discharge, as well as Electrode count (A6)
 * Crow - keeps track of Discharge timer 
-* Samir - exists. No additional values to track~
+* Samir - A6 cooldown is updated constantly by checking on-screen values
 
 ![Flame](https://cdn.discordapp.com/attachments/549708292423811074/1047449490187104267/burn.png)
 * Ruby - keeps track of estimated detonation timing

@@ -77,16 +77,18 @@ public abstract class AbstractFrame extends JFrame {
 			String[] realLines = getLines(hover.getText(), g2d);
 			int boxY = 64;
 			int boxWidth = (int)getBounds().getWidth();
-			int yOffset = 0;
-			int xOffset = 0;
-			label.drawRect(theGraphics, hover.getCoords()[0], hover.getCoords()[1], boxWidth,
+			label.drawRect(theGraphics, 0, hover.getCoords()[1], boxWidth,
 					boxY, Color.BLACK, (float) 0.6);
-			label.drawNormalText(g2d, hover.getTitle(), Tooltip.TEXT_SIZE,  hover.getCoords()[0], hover.getCoords()[1] + Tooltip.TEXT_SIZE, 1,
-					Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
+			boolean titleSkip = false;
+			if (hover.getTitle().length() > 0)
+				label.drawNormalText(g2d, hover.getTitle(), Tooltip.TEXT_SIZE, 10, hover.getCoords()[1] + Tooltip.TEXT_SIZE, 1,
+						Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
+			else
+				titleSkip = true;
 			for (int i = 0; i < realLines.length; i++) {
 				if (realLines[i] != null)
-					label.drawNormalText(g2d, realLines[i], (int)(Tooltip.TEXT_SIZE * 0.9), hover.getCoords()[0],
-							hover.getCoords()[1] + Tooltip.TEXT_SIZE * (i + 2), 1, Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
+					label.drawNormalText(g2d, realLines[i], (int)(Tooltip.TEXT_SIZE * 0.9), 10,
+							hover.getCoords()[1] + Tooltip.TEXT_SIZE * (i + 2) - (titleSkip ? (int)(Tooltip.TEXT_SIZE * 1) : 0), 1, Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
 			}
 		}
 	}
@@ -123,12 +125,16 @@ public abstract class AbstractFrame extends JFrame {
             }
     		label.drawRect(theGraphics, (int)p.getX() + xOffset, (int)p.getY() + yOffset, (int)(getMaxLineWidth(g2d, hover.getTitle(), realLines) * 1.2) + MARGIN * 2,
     				boxY, Color.BLACK, (float) 0.7);
-    		label.drawNormalText(g2d, hover.getTitle(), Tooltip.TEXT_SIZE, (int)p.getX() + MARGIN + xOffset, (int)p.getY() + MARGIN * 3 + yOffset, 1,
-                    Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
+			boolean titleSkip = false;
+			if (hover.getTitle().length() > 0)
+				label.drawNormalText(g2d, hover.getTitle(), Tooltip.TEXT_SIZE, (int)p.getX() + MARGIN + xOffset, (int)p.getY() + MARGIN * 3 + yOffset, 1,
+						Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
+			else
+				titleSkip = true;
             for (int i = 0; i < realLines.length; i++) {
             	if (realLines[i] != null)
 	            	label.drawNormalText(g2d, realLines[i], (int)(Tooltip.TEXT_SIZE * 0.9), (int)p.getX() + MARGIN + xOffset,
-	    	        		(int)p.getY() + MARGIN * 5 + Tooltip.TEXT_SIZE * (i + 1) + yOffset, 1, Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
+	    	        		(int)p.getY() + MARGIN * 5 + Tooltip.TEXT_SIZE * (i + 1) + yOffset - (titleSkip ? Tooltip.TEXT_SIZE : 0), 1, Color.WHITE, AbstractLabel.SHADOW_COLOR.darker());
             }
         }
     }

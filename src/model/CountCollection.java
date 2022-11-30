@@ -77,6 +77,25 @@ public class CountCollection extends DataCollection {
 		this.name = name;
 	}
 
+	/**
+	 * Handles a tick from Cobalt-B's A6 cooldown reduction effect.
+	 * @param dodge Whether this is applied by a dodge attack. Dodge attacks do not have the conditional to check
+	 *              for whether Ionic Burn is active.
+	 */
+	public void handleCobaltA6(boolean dodge) {
+		final int INTERVAL = 1500;
+		System.out.println("SECONDARY: " + getSecondary());
+		if (System.currentTimeMillis() - lastExtraActive >= INTERVAL && (dodge || getSecondary() > 0)) {
+			lastExtraActive = System.currentTimeMillis();
+			advanceCooldown(4);
+		}
+	}
+
+	public double getSecondary() {
+		double lastVal = getLastActive() / 1000.0;
+		double initialVal = getLastSawDelay();
+		return initialVal - lastVal;
+	}
 	public void updateExtra() {
 		final long time = System.currentTimeMillis();
 		lastExtraActive = time;
@@ -233,13 +252,19 @@ public class CountCollection extends DataCollection {
 
 	/**
 	 * Returns the cooldown in milliseconds.
-	 * @return
 	 */
 	public int getCooldown() {
 		if (lastCount <= 0)
 			return 0;
 		final long time = System.currentTimeMillis();
 		return (countDelay * 1000 - (int)(Math.abs(time - lastCount)));
+	}
+
+	/**
+	 * Advances the cooldown by the given amount of seconds.
+	 */
+	public void advanceCooldown(int seconds) {
+		lastCount -= seconds * 1000;
 	}
 
 	public int getCountDelay() {
@@ -270,7 +295,7 @@ public class CountCollection extends DataCollection {
 		if (lastSawDelay == 0)
 			return 0;
 		final long time = System.currentTimeMillis();
-		return (int)(lastSawDelay * 1000 - (int)(Math.abs(time - lastActive)));
+		return (lastSawDelay * 1000 - (int)(Math.abs(time - lastActive)));
 	}
 
 	@Override

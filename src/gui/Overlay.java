@@ -42,7 +42,8 @@ public class Overlay extends AbstractLabel {
     private static final double TEXT_PERCENT = 0.25;
     
     private static final GuiButton[] BUTTONS = {
-		GuiButton.UPDATE, 
+		GuiButton.UPDATE,
+		GuiButton.WARNING,
 		GuiButton.CLOSE, GuiButton.MUTE, GuiButton.PAUSE,
 		GuiButton.REPORT, GuiButton.RESET, GuiButton.MINIMIZE
     };
@@ -273,14 +274,6 @@ public class Overlay extends AbstractLabel {
 							case "Lin":
 								buffTimerIcon = "images/tableicons/moonlightrealm.png";
 								break;
-							/*case "Saki":
-								prefix = "Surge: ";
-							break;
-							case "Claudia":
-							case "Nemesis":
-							case "Tsubasa":
-								prefix = "Buff: ";
-								break;*/
 							default:
 								break;
 						}
@@ -303,13 +296,7 @@ public class Overlay extends AbstractLabel {
 					e.printStackTrace();
 		        	continue;
 		        }
-				if (TRACKPOINTS[i].getName().contains("SP Ef")) {
-					image = "images/tableicons/spirit.png";
-				} else { //personal buff or debuff
-					image = TRACKPOINTS[i].getIcon();
-					//if (dc.getLastInt() <= 0) //don't show other class properties
-					//	continue;
-				}
+				image = TRACKPOINTS[i].getIcon();
 				Color textColor = Color.WHITE;
 				Color textColor2 = Color.WHITE;
 				if (text.equalsIgnoreCase("Ready"))
@@ -329,9 +316,6 @@ public class Overlay extends AbstractLabel {
 						textColor2, SHADOW_COLOR.darker());*/
 		        int x = MARGIN + xOffset;
 		        int y = (int) (getSize().getHeight() * TEXT_PERCENT ) * line - 15;
-				if (((CountCollection)dc).getName().equals("Crow")) {
-					System.out.println("Buff timer: " + buffTimer + "; initialVal: " + initialVal);
-				}
 				if (buffTimerIcon.length() > 0 && initialVal != 0) {
 					double cdPerc = (initialVal - lastVal)/initialVal;
 					Color arcColor;
@@ -558,8 +542,19 @@ public class Overlay extends AbstractLabel {
         		if (MainDriver.started || !VersionCheck.needsUpdate())
         			continue;
         	}
+			if (b.getImage().contains("warning")) {
+				Tooltip toAdd = new Tooltip(b.getCoords()[0], b.getCoords()[1], "", "Image recognition thresholds were not met - readings may be inaccurate. Consider resetting.", 20, 20);
+				if (!MainDriver.isScoreAdjusted()) {
+					if (!((OverlayFrame)myFrame).tooltipMappings.containsKey(toAdd))
+						((OverlayFrame)myFrame).tooltipMappings.remove(toAdd);
+					continue;
+				}
+				if (!((OverlayFrame)myFrame).tooltipMappings.containsKey(toAdd))
+					((OverlayFrame)myFrame).tooltipMappings.put(toAdd, false);
+			}
         	b.handleDraw(this, theGraphics);
         }
-        ((OverlayFrame)myFrame).drawTooltips(theGraphics, this);
+		if (System.currentTimeMillis() - MainDriver.lastActivity >= 2000)
+        	((OverlayFrame)myFrame).drawTooltips(theGraphics, this);
     }
 }
