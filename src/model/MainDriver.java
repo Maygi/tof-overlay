@@ -57,16 +57,9 @@ public class MainDriver {
 	 * The coordinates are the values of the upper left / bottom right corners around the region to be viewed for a certain TrackPoint.
 	 */
 	public enum TrackPoint {
-		GURENBLADE("Guren Blade", "gurenblade.png", Resolution.ACTIVE_WEAPON, 0.98),
 		CLAUDIA("Claudia", "Buff duration", "claudia.png", 15, Resolution.ACTIVE_COOLDOWN, 0.99),
-
-		CHAKRAM("Chakram of the Seas", "chakram.png", Resolution.ACTIVE_WEAPON, 0.98),
 		SHIRO("Shiro", "Full Bloom timer", "shiro.png", 45, Resolution.ACTIVE_COOLDOWN, 0.98),
-
-		VENUS("Venus", "venus.png", Resolution.ACTIVE_WEAPON, 0.98),
 		NEMESIS("Nemesis", "Electrode gauge", "nemesis.png", 25, Resolution.ACTIVE_COOLDOWN, 0.99),
-
-		HEARTSTREAM("Heartstream", "heartstream.png", Resolution.ACTIVE_WEAPON, 0.96),
 		SAKI("Saki", "Estimated cooldown of Surge (starts on weapon swap), and skill reset counter", "saki.png", 30, Resolution.ACTIVE_COOLDOWN, 0.99),
 		TSUBASA("Tsubasa", "Buff timer (refreshes on dodge)", "tsubasa.png", 12, Resolution.ACTIVE_COOLDOWN, 0.99),
 		SAMIR("Samir", "", "samir.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
@@ -102,75 +95,13 @@ public class MainDriver {
 		private String text = null;
 		private String lastRead = "";
 		private int textCount = 0;
-		
+
 		private TrackPoint(String name, String intro, int regionIndex) {
 			this.regionIndex = regionIndex;
 			this.name = name;
 			this.intro = intro;
 			this.image = null;
 			this.threshold = 0.7;
-		}
-		private TrackPoint(String name, String intro) {
-			this.regionIndex = -1;
-			this.name = name;
-			this.intro = intro;
-			this.image = null;
-			this.threshold = 0.7;
-		}
-		private TrackPoint(String name, String intro, String image) {
-			this.regionIndex = -1;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.threshold = 0.7;
-		}
-		private TrackPoint(String name, String intro, String image, String secondaryImage) {
-			this.regionIndex = -1;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.secondaryImage = secondaryImage;
-			this.threshold = 0.7;
-		}
-		private TrackPoint(String name, String intro, String image, String secondaryImage, int regionIndex) {
-			this.regionIndex = -1;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.secondaryImage = secondaryImage;
-			this.threshold = 0.7;
-			this.regionIndex = regionIndex;
-		}
-		private TrackPoint(String name, String intro, String image, double threshold) {
-			this.regionIndex = -1;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.threshold = threshold;
-		}
-		private TrackPoint(String name, String intro, String image, int regionIndex) {
-			this.regionIndex = regionIndex;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.threshold = 0.7;
-		}
-		private TrackPoint(String name, String intro, String image, String secondaryImage, int regionIndex, double threshold) {
-			this.regionIndex = regionIndex;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.secondaryImage = secondaryImage;
-			this.threshold = threshold;
-		}
-		private TrackPoint(String name, String intro, String image, String secondaryImage, String req, int regionIndex, double threshold) {
-			this.regionIndex = regionIndex;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.secondaryImage = secondaryImage;
-			this.req = req;
-			this.threshold = threshold;
 		}
 		private TrackPoint(String name, String intro, String image, int cd, int resolutionIndex, double threshold) {
 			this.regionIndex = resolutionIndex;
@@ -179,30 +110,6 @@ public class MainDriver {
 			this.cd = cd;
 			this.image = image;
 			this.threshold = threshold;
-		}
-		private TrackPoint(String name, String intro, String image, int cd, int resolutionIndex, double threshold, TrackPoint dependent) {
-			this.regionIndex = resolutionIndex;
-			this.name = name;
-			this.intro = intro;
-			this.cd = cd;
-			this.image = image;
-			this.threshold = threshold;
-			this.dependent = dependent;
-		}
-		private TrackPoint(String name, String intro, String image, int resolutionIndex, double threshold) {
-			this.regionIndex = resolutionIndex;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.threshold = threshold;
-		}
-		private TrackPoint(String name, String intro, String image, int resolutionIndex, double threshold, int classIndex) {
-			this.regionIndex = resolutionIndex;
-			this.name = name;
-			this.intro = intro;
-			this.image = image;
-			this.threshold = threshold;
-			this.classIndex = classIndex;
 		}
 		private TrackPoint(String name, String image, int resolutionIndex, double threshold) {
 			this.regionIndex = resolutionIndex;
@@ -259,17 +166,6 @@ public class MainDriver {
 				this.text = text;
 				log("Initialized " + name + " to " + text);
 			}
-			/*if (this.textCount >= 5)
-				return;
-			if (this.text.equals(text)) {
-				textCount++;
-				if (this.textCount >= 5) {
-					System.out.println("Initialized " + name + " to " + text);
-				}
-			} else {
-				textCount = 0;
-				this.text = text;
-			}*/
 		}
 
 		public void read(String text) {
@@ -485,10 +381,6 @@ public class MainDriver {
 		data.put(TrackPoint.WEAPON1, new HitMissCollection());
 		data.put(TrackPoint.WEAPON2, new HitMissCollection());
 
-		/*data.put(TrackPoint.GURENBLADE, new HitMissCollection());
-		data.put(TrackPoint.VENUS, new HitMissCollection());
-		data.put(TrackPoint.CHAKRAM, new HitMissCollection());
-		data.put(TrackPoint.HEARTSTREAM, new HitMissCollection());*/
 		data.put(TrackPoint.SHIELD, new HitMissCollection());
 
 		data.put(TrackPoint.CLAUDIA, new CountCollection(TrackPoint.CLAUDIA.getCooldown(), 25, "Claudia"));
@@ -553,10 +445,6 @@ public class MainDriver {
     	started = true;
     	Sound.RESET.play();
         overlay.resetTooltips();
-		firstHPReading = null;
-        lastHPReading = null;
-        secondReading = null;
-        activeClass = -1;
 		weaponsFound = 0;
 		TrackPoint.WEAPON1.reset();
 		TrackPoint.WEAPON2.reset();
@@ -576,9 +464,6 @@ public class MainDriver {
     		pauseTime = System.currentTimeMillis();
 	    	active = false;
 	    	Sound.PAUSE.play();
-			firstHPReading = null;
-	        lastHPReading = null;
-	        secondReading = null;
     	}
     }
     
@@ -642,61 +527,6 @@ public class MainDriver {
     	sb.append(seconds >= 10 ? seconds : "0" + seconds);
     	return sb.toString();
     }
-    
-    private static int currentTick = 0;
-    
-    /**
-     * Equalizes DataCollections by adding values equal to the first record to the start if they are shorter than others.
-     */
-    public static void equalize() {
-    	int maxLength = -1;
-    	for (TrackPoint tp : data.keySet()) {
-    		DataCollection dc = data.get(tp);
-    		if (dc.getData().size() > maxLength)
-    			maxLength = dc.getData().size();
-    	}
-    	for (TrackPoint tp : data.keySet()) {
-    		DataCollection dc = data.get(tp);
-    		if (tp.getName().contains("Holy Symbol Damage"))
-    			continue;
-    		if (dc.getData().size() < maxLength) {
-    			dc.equalize(maxLength);
-    		}
-    	}
-    	
-    }
-    
-    private static BigInteger firstHPReading = null;
-    private static BigInteger lastHPReading = null;
-    private static BigInteger secondReading = null;
-    private static int activeClass = -1;
-    
-    /**
-     * Whether or not the program should get ready to check for the clear screen.
-     * @return
-     */
-    private static boolean checkForClear() {
-    	if (firstHPReading != null && lastHPReading != null) {
-    		return (lastHPReading.compareTo(firstHPReading.divide(new BigInteger("10"))) < 0);
-    	}
-    	return false;
-    }
-    
-    public static boolean isClose(BigInteger one, BigInteger two) {
-    	if (one.subtract(two).abs().compareTo(new BigInteger("10000000")) <= 0)
-    		return true;
-    	BigInteger bigger, smaller;
-    	if (one.compareTo(two) > 0) {
-    		bigger = one;
-    		smaller = two;
-    	} else {
-    		bigger = two;
-    		smaller = one;
-    	}
-    	if (smaller.multiply(new BigInteger("2")).compareTo(bigger) <= 0) //if it's over 2x difference, it's bad
-    		return false;
-    	return true;
-    }
 
 	private static Map<Integer, TrackPoint> weaponMap = new HashMap<>();
 	private static Map<String, Integer> reverseWeaponMap = new HashMap<>();
@@ -716,16 +546,11 @@ public class MainDriver {
     		resolution.initialize();
     		return;
     	}
-        //double timeMultiplier = ((TimeCollection)MainDriver.data.get(TrackPoint.TIME)).getTimeMultiplier();
-        //System.out.println("Multiplier: "+timeMultiplier);
         Screen s = new Screen();
-        int shields = 0;
-        boolean dissonance = false;
 		int dodges = 0;
 		shielded = false;
 
 		boolean weaponObscured = false;
-        currentTick++;
         Map<Integer, Region> regionMap = new TreeMap<Integer, Region>();
         for (Integer regionId : trackPointByRegion.keySet()) {
         	List<TrackPoint> list = trackPointByRegion.get(regionId);
