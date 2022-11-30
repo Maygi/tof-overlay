@@ -25,7 +25,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "0.9";
+	public static final String VERSION = "1.1";
 	
 	private static final int DEFAULT_WIDTH = 1920;
 	private static final int DEFAULT_HEIGHT = 1080;
@@ -348,7 +348,8 @@ public class MainDriver {
         initializeData();
 		start();
     	liveVersion = VersionCheck.getVersion();
-
+		log("Live Version: " + liveVersion + "; Current Version: " + VERSION + "; needs update: " +
+				VersionCheck.needsUpdate());
 		long lastTick = 0;
 		long currentTick;
 		OCR.reset();

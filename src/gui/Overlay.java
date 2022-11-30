@@ -546,7 +546,7 @@ public class Overlay extends AbstractLabel {
         }
         for (final GuiButton b : BUTTONS) {
         	if (b.getImage().contains("update")) {
-        		if (MainDriver.started || !VersionCheck.needsUpdate())
+        		if (!VersionCheck.needsUpdate())
         			continue;
         	}
 			if (b.getImage().contains("warning")) {

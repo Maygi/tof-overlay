@@ -55,7 +55,7 @@ public class VersionCheck {
 		String[] currentParts = current.split("\\.");
 		String[] liveParts = live.split("\\.");
 		for (int i = 0; i < currentParts.length; i++) {
-			int realCurrent = Integer.parseInt(currentParts[i]);
+			int realCurrent = Integer.parseInt(currentParts[i].replaceAll("V", "").replaceAll("-BETA",""));
 			if (i >= liveParts.length) { //maybe we have current 1.3.1 vs live 1.3?
 				return true;
 			} else {
@@ -86,7 +86,8 @@ public class VersionCheck {
 			index = json.indexOf("\"");
 			json = json.substring(0, index);
 			json = json.toUpperCase();
-			json = json.replaceAll("MSCA", "");
+			json = json.replaceAll("V", "");
+			json = json.replaceAll("-BETA", "");
 			if (latestVersion(json, latest))
 				latest = json;
 			if (raw.contains("},")) {
