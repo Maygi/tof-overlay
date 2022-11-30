@@ -21,7 +21,7 @@ public enum GuiButton {
 	UP(30 + 170 - 20 + 800, 435 + 24, "images/ui/up_arrow.png"),
 	DOWN(30 + 170 - 20 + 800, 435 + 24 + 19, "images/ui/down_arrow.png"),
 
-	UPDATE(375, 12, "images/ui/update.png"),
+	UPDATE(100, 12, "images/ui/update.png"),
 	MUTE(125, 12, "images/ui/mute.png"),
 	PAUSE(300, 12, "images/ui/pause.png"),
 	RESET(150, 12, "images/ui/reset.png"),

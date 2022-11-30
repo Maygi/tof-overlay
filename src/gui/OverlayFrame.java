@@ -20,6 +20,7 @@ import javax.swing.SpringLayout;
 
 import model.MainDriver;
 import sound.Sound;
+import util.VersionCheck;
 
 /**
  * The main JFrame that contains the chart and handles several mouse events.
@@ -88,10 +89,10 @@ public class OverlayFrame extends AbstractFrame {
     
     public void openUpdate() {
     	try {
-			java.awt.Desktop.getDesktop().browse(new URI("https://github.com/Maygi/ms2combatanalyzer/releases"));
+			java.awt.Desktop.getDesktop().browse(new URI("https://github.com/Maygi/tof-overlay/releases"));
 		} catch (IOException | URISyntaxException e) {
 			JOptionPane.showMessageDialog(this,
-				    "Unable to open website. Please manually navigate to https://github.com/Maygi/ms2combatanalyzer/releases to download it!",
+				    "Unable to open website. Please manually navigate to https://github.com/Maygi/tof-overlay/releases to download it!",
 				    "Error",
 				    JOptionPane.ERROR_MESSAGE);
 			e.printStackTrace();
@@ -143,7 +144,7 @@ public class OverlayFrame extends AbstractFrame {
 	                	if (b.getImage().contains("report")) {
 	                		openReport();
 	                	}
-	                    if (b.getImage().contains("update")) {
+	                    if (b.getImage().contains("update") && VersionCheck.needsUpdate()) {
 	                    	openUpdate();
 	                    }
 	                	if (b.getImage().contains("mute")) {

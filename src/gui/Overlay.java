@@ -503,16 +503,6 @@ public class Overlay extends AbstractLabel {
 			                (int) (getSize().getHeight() * 0.55), 1,
 			                Color.WHITE, SHADOW_COLOR.darker());
 	        		
-	        	} else {
-			       /* drawText(g2d, "Waiting for data...", FONT_SIZE,  (int) (getSize().getWidth() * 0.3),
-			                (int) (getSize().getHeight() * 0.3), 1,
-			                Color.WHITE, SHADOW_COLOR.darker());
-			        drawNormalTextCentered(g2d, "Enter combat with a boss to begin!", FONT_SIZE,  (int) (getSize().getWidth() * 0.5),
-			                (int) (getSize().getHeight() * 0.55), 1,
-			                Color.WHITE, SHADOW_COLOR.darker());
-			        drawNormalTextCentered(g2d, "(make sure UI size is set to 50%)", FONT_SIZE,  (int) (getSize().getWidth() * 0.5),
-			                (int) (getSize().getHeight() * 0.7), 1,
-			                Color.WHITE, SHADOW_COLOR.darker());*/
 	        	}
         	} catch (Exception e) {
 		        drawText(g2d, "Unable to check versions.", FONT_SIZE,  (int) (getSize().getWidth() * 0.3),
