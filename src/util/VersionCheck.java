@@ -50,6 +50,8 @@ public class VersionCheck {
 	public static boolean latestVersion(String base, String compare) {
 		String current = base;
 		String live = compare.replaceAll("v", "");
+		String[] hyphenSplit = live.split("-");
+		live = hyphenSplit[0];
 		String[] currentParts = current.split("\\.");
 		String[] liveParts = live.split("\\.");
 		for (int i = 0; i < currentParts.length; i++) {

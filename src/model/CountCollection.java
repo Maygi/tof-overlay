@@ -176,8 +176,11 @@ public class CountCollection extends DataCollection {
 			}
 			hitProtection = 1;
 			if (additionalCasts > 0 || Math.abs(time - lastCount) / 1000 > countDelay) {
-				if (lastCount != -1)
+				if (lastCount != -1) {
 					totalCounts++;
+					if (totalCounts % 5 == 0)
+						MainDriver.sakiCheck();
+				}
 				if (additionalCasts > 0) {
 					additionalCasts--;
 				} else
@@ -197,8 +200,7 @@ public class CountCollection extends DataCollection {
 					if (lastActiveList.size() > 2)
 						lastActiveList.remove(0); //remove first
 				}
-				if (totalCounts % 5 == 0)
-					MainDriver.sakiCheck();
+				MainDriver.log("Total skill count: " + totalCounts);
 			}
 		}
 		if (!hit) {

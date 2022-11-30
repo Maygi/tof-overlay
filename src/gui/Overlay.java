@@ -320,7 +320,18 @@ public class Overlay extends AbstractLabel {
 					double cdPerc = (initialVal - lastVal)/initialVal;
 					Color arcColor;
 					double drawPerc = (lastVal)/initialVal;
-					if (cdPerc <= 0.25 || text2.equals("Active"))
+					/*if (buffTimerIcon.contains("shield") && !MainDriver.isShielded()) {
+						drawPerc = 0; //nande?
+						lastVal = 0;
+						text2 = "Inactive";
+						arcColor = Color.RED;
+					}*/
+					if (drawPerc > 1) {
+						drawPerc = 0; //nande?
+						lastVal = 0;
+						text2 = "Inactive";
+						arcColor = Color.RED;
+					} else if (cdPerc <= 0.25 || text2.equals("Active"))
 						arcColor = Color.GREEN;
 					else if (cdPerc <= 0.50)
 						arcColor = Color.YELLOW;
@@ -329,14 +340,9 @@ public class Overlay extends AbstractLabel {
 					else
 						arcColor = Color.RED;
 					if (buffTimerIcon.contains("electrocute"))
-						arcColor = new Color(204, 153, 255);
+						arcColor = WeaponData.COLOR_VOLT;
 					if (text2.equals("Active"))
 						drawPerc = 1;
-					if (drawPerc > 1) {
-						drawPerc = 0; //nande?
-						lastVal = 0;
-						text2 = "Inactive";
-					}
 					int xOffAdditional = 0;
 					if (lastVal <= 0) {
 						xOffAdditional = -25;
@@ -406,10 +412,11 @@ public class Overlay extends AbstractLabel {
 						}
 						break;*/
 					case "Coco":
+					case "Shiro":
 						double timeDelta = (System.currentTimeMillis() - ((CountCollection)dc).getLastExtraActive()) / 1000.0;
 						if (timeDelta < ((CountCollection)dc).getExtraDuration()) {
 							double ratio = 1 - timeDelta / ((CountCollection)dc).getExtraDuration();
-							Color barColor = new Color(158, 240, 255);
+							Color barColor = WeaponData.getColor(((CountCollection)dc).getName());
 							drawRect(theGraphics, x + 64 + MARGIN, y + 57, (int) (ratio * 110),
 									5, barColor, 1);
 						}
@@ -417,7 +424,7 @@ public class Overlay extends AbstractLabel {
 					case "Meryl":
 						if (WeaponConfig.getData().get("Meryl").getAdvancement() >= 3) {
 							double shieldCd = Math.min(20, 20 - Math.min(20, lastVal + 10));
-							Color barColor = shieldCd == 20 ? new Color(181, 255, 184) : new Color(158, 240, 255);
+							Color barColor = shieldCd == 20 ? new Color(181, 255, 184) : WeaponData.getColor(((CountCollection)dc).getName());
 							drawRect(theGraphics, x + 64 + MARGIN, y + 57, (int) (shieldCd / 20.0 * 110),
 									5, barColor, 1);
 						}
@@ -426,7 +433,7 @@ public class Overlay extends AbstractLabel {
 						if (WeaponConfig.getData().get("Lin").getAdvancement() >= 6) {
 							int resetCounter = MainDriver.getDischargeCount() % 3;
 							for (int j = 0; j < resetCounter; j++) {
-								Color boxColor = new Color(201, 255, 186);
+								Color boxColor = WeaponData.getColor(((CountCollection)dc).getName());
 								drawRect(theGraphics, x + 64 + MARGIN + (int) (56.66 * j) + 2, y + 57 + 2, 50,
 										5, boxColor.darker().darker(), 1);
 								drawRect(theGraphics, x + 64 + MARGIN + (int) (56.66 * j), y + 57, 50,
@@ -438,7 +445,7 @@ public class Overlay extends AbstractLabel {
 						if (WeaponConfig.getData().get("Saki").getAdvancement() >= 1) {
 							int resetCounter = ((CountCollection) dc).getCount() % 5;
 							for (int j = 0; j < resetCounter; j++) {
-								Color boxColor = ((tick % 4) == j && resetCounter == 4) ? new Color(219, 250, 255) : new Color(158, 240, 255);
+								Color boxColor = ((tick % 4) == j && resetCounter == 4) ? new Color(219, 250, 255) : WeaponData.getColor(((CountCollection)dc).getName());
 								drawRect(theGraphics, x + 64 + MARGIN + (int) (28.33 * j) + 2, y + 57 + 2, 25,
 										5, boxColor.darker().darker(), 1);
 								drawRect(theGraphics, x + 64 + MARGIN + (int) (28.33 * j), y + 57, 25,

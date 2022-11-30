@@ -25,7 +25,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "1.0";
+	public static final String VERSION = "0.9";
 	
 	private static final int DEFAULT_WIDTH = 1920;
 	private static final int DEFAULT_HEIGHT = 1080;
@@ -55,8 +55,8 @@ public class MainDriver {
 	 * The coordinates are the values of the upper left / bottom right corners around the region to be viewed for a certain TrackPoint.
 	 */
 	public enum TrackPoint {
-		CLAUDIA("Claudia", "Buff duration", "claudia.png", 15, Resolution.ACTIVE_SKILL, 0.99999),
-		SHIRO("Shiro", "Full Bloom timer", "shiro.png", 45, Resolution.ACTIVE_SKILL, 0.99),
+		CLAUDIA("Claudia", "Buff duration", "claudia.png", 15, Resolution.ACTIVE_SKILL, 0.99),
+		SHIRO("Shiro", "Full Bloom timer and cooldown reset timer", "shiro.png", 45, Resolution.ACTIVE_SKILL, 0.99),
 		NEMESIS("Nemesis", "Electrode gauge", "nemesis.png", 25, Resolution.ACTIVE_SKILL, 0.99),
 		SAKI("Saki", "Estimated cooldown of Surge (starts on weapon swap), and skill reset counter", "saki.png", 30, Resolution.ACTIVE_SKILL, 0.99),
 		TSUBASA("Tsubasa", "Buff timer (refreshes on dodge)", "tsubasa.png", 12, Resolution.ACTIVE_SKILL, 0.99),
@@ -66,7 +66,7 @@ public class MainDriver {
 		MERYL("Meryl", "Shield timer and cooldown", "meryl.png", 45, Resolution.ACTIVE_SKILL, 0.99),
 
 		//wip need new sprite
-		COBALT("Cobalt", "Ionic scorch timer", "claudia.png", 60, Resolution.ACTIVE_SKILL, 0.99),
+		COBALT("Cobalt", "Ionic scorch timer", "cobalt.png", 60, Resolution.ACTIVE_SKILL, 0.99),
 		HUMA("Huma", "Sharp Axe timer", "huma.png", 25, Resolution.ACTIVE_SKILL, 0.99),
 		COCO("Coco", "Healing Bee timer and A3 buff timer", "coco.png", 60, Resolution.ACTIVE_SKILL, 0.99),
 		KING("King", "Flaming Scythe timer", "king.png", 45, Resolution.ACTIVE_SKILL, 0.99),
@@ -741,7 +741,7 @@ public class MainDriver {
 			log("Resetting the weapon config.");
 			TrackPoint.WEAPON1.reset();
 			TrackPoint.WEAPON2.reset();
-			if (!weaponObscured) {
+			if (!weaponObscured && highestScore > 0) {
 				scoreAdjustment = .995 / highestScore;
 				log("Highest score was " + highestScore + "; setting adjustment to " + scoreAdjustment);
 			}
@@ -965,17 +965,21 @@ public class MainDriver {
 
 	public static void shiroCheck() {
 		if (weaponMap.get(currentWeapon).getName().equals("Shiro") &&
-				WeaponConfig.getData().get("Shiro").getAdvancement() >= 3) {
+				WeaponConfig.getData().get("Shiro").getAdvancement() >= 3 &&
+				System.currentTimeMillis() - ((CountCollection)(data.get(weaponMap.get(currentWeapon)))).getLastExtraActive() >= 30000) {
+			((CountCollection)(data.get(weaponMap.get(currentWeapon)))).updateExtra(30);
 			log("Attempt to shiro reset");
 			resetAllSkills();
 		}
 	}
-	public static void sakiCheck() {
+	public static boolean sakiCheck() {
 		if (reverseWeaponMap.containsKey("Saki") &&
 				WeaponConfig.getData().get("Saki").getAdvancement() >= 1) {
 			log("Attempting to Saki reset");
 			resetAllSkills();
+			return true;
 		}
+		return false;
 	}
 
 	public static void resetAllSkills() {
