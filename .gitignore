@@ -1,13 +1,14 @@
 
-.idea/libraries/jnativehook_2_2_2.xml
-.idea/libraries/jnativehook_2_2_2.xml
-.idea/libraries/MSCA_lib.xml
-.idea/misc.xml
-.idea/modules.xml
-.idea/workspace.xml
 *.class
-.idea/libraries/jnativehook_2_2_2.xml
-.idea/modules.xml
-.idea/misc.xml
-.idea/libraries/jnativehook_2_2_2.xml
 log.txt
+.idea/
+bin/
+out/
+tof-overlay/
+tof-overlay.jar
+sikulixapi.jar
+jnativehook-2.2.2.jar
+.idea/misc.xml
+.idea/modules.xml
+.idea/libraries/jnativehook_2_2_2.xml
+.idea/artifacts/tof_overlay_jar.xml

@@ -78,7 +78,6 @@ public class Resolution {
 	public void initialize() {
 		//configure 1920x1080 sizes. region sizes should be similar
         Region clock = new Region(0, 0, 30, 30);
-		Match m = clock.exists("images/sikuli/clock.png", 0.01);
 		/*if (m != null && m.getScore() >= 0.9) {
 			System.out.println("Game client is in focus.");
 		} else {

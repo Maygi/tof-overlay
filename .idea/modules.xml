@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/ms2combatanalyzer.iml" filepath="$PROJECT_DIR$/ms2combatanalyzer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tof-overlay.iml" filepath="$PROJECT_DIR$/tof-overlay.iml" />
     </modules>
   </component>
 </project>

@@ -1,264 +1,58 @@
-ClassNotFoundException
 Started.
-Initialized Weapon 1 to 3
-Initialized Weapon 2 to 1
-WEAPON: 3; weaponA 3; weaponB: 1; foundA: 3; foundB: 1
+Initialized Weapon 2 to 3
 Resetting the weapon config.
-Initialized Weapon 1 to 3
-Initialized Weapon 2 to 1
-Looks like Tsubasa is weapon #3
-Tsubasa: 0.9955088496208191; true
-Swap Diff: 1669797287599
-Tsubasa: 0.9966132640838623; true
-Tsubasa: 0.9966596961021423; true
-Tsubasa: 0.995781421661377; true
-Tsubasa: 0.9954777956008911; true
-Tsubasa: 0.9963356852531433; true
-Tsubasa: 0.9955695867538452; true
-Tsubasa: 0.9957185387611389; true
-Tsubasa: 0.9354304671287537; false
-Tsubasa: 0.933412492275238; false
-Tsubasa: 0.9411510229110718; false
-Tsubasa: 0.9372554421424866; false
-Tsubasa: 0.9174713492393494; false
-Tsubasa: 0.9142534136772156; false
-Tsubasa: 0.9180071353912354; false
-Tsubasa: 0.9125104546546936; false
-Tsubasa: 0.9010794162750244; false
-Tsubasa: 0.8568536043167114; false
-Tsubasa: 0.9203795790672302; false
-Tsubasa: 0.906325101852417; false
-Tsubasa: 0.9593263864517212; false
-Tsubasa: 0.8377782106399536; false
-Tsubasa: 0.9166527390480042; false
-Tsubasa: 0.928598940372467; false
-Tsubasa: 0.9344921708106995; false
-Tsubasa: 0.9362512826919556; false
-Tsubasa: 0.9375466108322144; false
-Tsubasa: 0.9350559711456299; false
-Tsubasa: 0.9325436353683472; false
-Tsubasa: 0.9317549467086792; false
-Tsubasa: 0.9375213384628296; false
-Tsubasa: 0.9338350892066956; false
-Tsubasa: 0.9965515732765198; true
-Tsubasa: 0.9965460896492004; true
-You dodged on Tsubasa. Now you have: 3 dodges left
-Tsubasa: 0.9971500039100647; true
-Tsubasa: 0.9972485303878784; true
-Tsubasa: 0.9972570538520813; true
-Tsubasa: 0.9971802830696106; true
-Tsubasa: 0.9972406029701233; true
-Tsubasa: 0.997206449508667; true
-Tsubasa: 0.9973368644714355; true
-Tsubasa: 0.9977765083312988; true
-Tsubasa: 0.9978985786437988; true
-Tsubasa: 0.9982800483703613; true
-Tsubasa: 0.9978251457214355; true
-Tsubasa: 0.9976604580879211; true
-Tsubasa: 0.9976646900177002; true
-Tsubasa: 0.9981393218040466; true
-Tsubasa: 0.997366189956665; true
-Tsubasa: 0.9974930286407471; true
-You dodged on Tsubasa. Now you have: 3 dodges left
-Tsubasa: 0.9981538653373718; true
-Tsubasa: 0.9975069165229797; true
-Tsubasa: 0.9969812035560608; true
-Tsubasa: 0.997657299041748; true
-You dodged on Tsubasa. Now you have: 2 dodges left
-Tsubasa: 0.9979191422462463; true
-Tsubasa: 0.9977012872695923; true
-Tsubasa: 0.9974783062934875; true
-Tsubasa: 0.9977908730506897; true
-Tsubasa: 0.9979538917541504; true
-Tsubasa: 0.9972284436225891; true
-Tsubasa: 0.9978518486022949; true
-You dodged on Tsubasa. Now you have: 3 dodges left
-Tsubasa: 0.9977369904518127; true
-Tsubasa: 0.9922109842300415; true
-Tsubasa: 0.9975239038467407; true
-Tsubasa: 0.9974449872970581; true
-You dodged on Tsubasa. Now you have: 2 dodges left
-Tsubasa: 0.9980074763298035; true
-Tsubasa: 0.9978969693183899; true
-You dodged on Tsubasa. Now you have: 1 dodges left
-Tsubasa: 0.9973779916763306; true
-Tsubasa: 0.9970220327377319; true
-Tsubasa: 0.9966931343078613; true
-Tsubasa: 0.9968761801719666; true
-Tsubasa: 0.9964243173599243; true
-Tsubasa: 0.9969839453697205; true
-Tsubasa: 0.9970602989196777; true
-Tsubasa: 0.9971655011177063; true
-Tsubasa: 0.9966488480567932; true
-Tsubasa: 0.994585394859314; true
-Tsubasa: 0.9939969778060913; true
-Tsubasa: 0.9945270419120789; true
-Tsubasa: 0.9965534210205078; true
-Tsubasa: 0.99607914686203; true
-Tsubasa: 0.9958214163780212; true
-Tsubasa: 0.9958758354187012; true
-Tsubasa: 0.9954512119293213; true
-You dodged on Tsubasa. Now you have: 2 dodges left
-Tsubasa: 0.9969005584716797; true
-Tsubasa: 0.9975091814994812; true
-Tsubasa: 0.9972342848777771; true
-Tsubasa: 0.9973818063735962; true
-Tsubasa: 0.9974416494369507; true
-Tsubasa: 0.9975651502609253; true
-Tsubasa: 0.9977862238883972; true
-Tsubasa: 0.9979612231254578; true
-Tsubasa: 0.9977940320968628; true
-Tsubasa: 0.9977187514305115; true
-Tsubasa: 0.9976990818977356; true
-Tsubasa: 0.9976814985275269; true
-Tsubasa: 0.997661292552948; true
-Tsubasa: 0.9976598620414734; true
-You dodged on Tsubasa. Now you have: 3 dodges left
-Tsubasa: 0.997608482837677; true
-Tsubasa: 0.9973424673080444; true
-Tsubasa: 0.9973891973495483; true
-Tsubasa: 0.9974208474159241; true
-Tsubasa: 0.9977313280105591; true
-Tsubasa: 0.9978971481323242; true
-Tsubasa: 0.9982072710990906; true
-Tsubasa: 0.9982117414474487; true
-Tsubasa: 0.9975402355194092; true
-Tsubasa: 0.996853232383728; true
-Tsubasa: 0.9973723888397217; true
-You dodged on Tsubasa. Now you have: 3 dodges left
-Tsubasa: 0.9911571145057678; true
-Tsubasa: 0.9945361614227295; true
-Tsubasa: 0.9973496198654175; true
-Tsubasa: 0.9949045777320862; true
-Tsubasa: 0.9968652725219727; true
-Tsubasa: 0.9979417324066162; true
-Tsubasa: 0.9971972107887268; true
-Tsubasa: 0.9976500868797302; true
-Tsubasa: 0.9939250349998474; true
-WEAPON: 2; weaponA 3; weaponB: 1; foundA: 3; foundB: 2
-WEAPON: 1; weaponA 3; weaponB: 1; foundA: 1; foundB: 2
-Looks like Saki is weapon #1
-Saki: 0.9936645030975342; true
-Swap Diff: 1669797349148
-Saki: 0.9905911087989807; true
-Saki: 0.9948151111602783; true
-Saki: 0.9940450191497803; true
-Saki: 0.9947975277900696; true
-Saki: 0.9946181178092957; true
-Saki: 0.9946893453598022; true
-Saki: 0.9945321083068848; true
-Saki: 0.9945673942565918; true
-Saki: 0.991413414478302; true
-Saki: 0.9935104846954346; true
-Saki: 0.9936044812202454; true
-Saki: 0.9929866194725037; true
-Saki: 0.9920280575752258; true
-Saki: 0.9918357133865356; true
-Saki: 0.9927100539207458; true
-Saki: 0.9925679564476013; true
-Saki: 0.9928443431854248; true
-Saki: 0.9923801422119141; true
-Saki: 0.9925995469093323; true
-WEAPON: 3; weaponA 3; weaponB: 1; foundA: 1; foundB: 3
-You've swapped to Tsubasa
-Tsubasa: 0.9960127472877502; true
-Swap Diff: 1669797358872
-Tsubasa: 0.9960683584213257; true
-Tsubasa: 0.9275861382484436; false
-Tsubasa: 0.9337373971939087; false
-Tsubasa: 0.939674437046051; false
-Tsubasa: 0.9434738159179688; false
-Tsubasa: 0.9260990023612976; false
-Tsubasa: 0.9160720705986023; false
-Tsubasa: 0.9283647537231445; false
-Tsubasa: 0.9337167739868164; false
-Tsubasa: 0.9314635992050171; false
-Tsubasa: 0.9331936240196228; false
-Tsubasa: 0.9450807571411133; false
-Tsubasa: 0.9451746940612793; false
-Tsubasa: 0.9344534277915955; false
-Tsubasa: 0.9343884587287903; false
-Tsubasa: 0.934033215045929; false
-You dodged on Tsubasa. Now you have: 3 dodges left
-WEAPON: 1; weaponA 3; weaponB: 1; foundA: 1; foundB: a
-You've swapped to Saki
-Saki: 0.9594634175300598; false
-Swap Diff: 1669797367196
-WEAPON: 3; weaponA 3; weaponB: 1; foundA: 1; foundB: 3
-You've swapped to Tsubasa
-Tsubasa: 0.9277225136756897; false
-Swap Diff: 1669797367694
-Tsubasa: 0.9277254343032837; false
-Tsubasa: 0.9351580142974854; false
-Tsubasa: 0.9352157711982727; false
-Tsubasa: 0.9340869784355164; false
-Tsubasa: 0.9340741634368896; false
-Tsubasa: 0.9323570728302002; false
-Tsubasa: 0.9332365393638611; false
-Tsubasa: 0.9964803457260132; true
-Tsubasa: 0.9964795708656311; true
-Tsubasa: 0.9964817762374878; true
-Tsubasa: 0.996483564376831; true
-Tsubasa: 0.9964804649353027; true
-Tsubasa: 0.9964795708656311; true
-Tsubasa: 0.9964793920516968; true
-Tsubasa: 0.9964804649353027; true
-Tsubasa: 0.996478259563446; true
-Tsubasa: 0.9964800477027893; true
-Tsubasa: 0.9964744448661804; true
-Tsubasa: 0.9964823126792908; true
-Tsubasa: 0.9964810013771057; true
-Tsubasa: 0.9964795112609863; true
-Tsubasa: 0.9964763522148132; true
-Tsubasa: 0.9964830875396729; true
-Tsubasa: 0.9964764714241028; true
-Tsubasa: 0.9964776635169983; true
-Tsubasa: 0.996478796005249; true
-Tsubasa: 0.9964814186096191; true
-Tsubasa: 0.9964776635169983; true
-Tsubasa: 0.9964755177497864; true
-Tsubasa: 0.9964819550514221; true
-Tsubasa: 0.996476948261261; true
-Tsubasa: 0.9964819550514221; true
-Tsubasa: 0.9964779615402222; true
-Tsubasa: 0.996478259563446; true
-Tsubasa: 0.9964814782142639; true
-Tsubasa: 0.9964819550514221; true
-Tsubasa: 0.9964812994003296; true
-Tsubasa: 0.9964809417724609; true
-Tsubasa: 0.9964771866798401; true
-Tsubasa: 0.9964830279350281; true
-Tsubasa: 0.9964790940284729; true
-Tsubasa: 0.9964811205863953; true
-Tsubasa: 0.9964846968650818; true
-Tsubasa: 0.9964799880981445; true
-Tsubasa: 0.9964785575866699; true
-Tsubasa: 0.9964792728424072; true
-Tsubasa: 0.9964762330055237; true
-Tsubasa: 0.9964811205863953; true
-Tsubasa: 0.9964784383773804; true
-Tsubasa: 0.9964830875396729; true
-Tsubasa: 0.9964817762374878; true
-Tsubasa: 0.9792911410331726; false
-You dodged on Tsubasa. Now you have: 3 dodges left
-WEAPON: 1; weaponA 3; weaponB: 1; foundA: 1; foundB: a
-You've swapped to Saki
-Saki: 0.9594634175300598; false
-Swap Diff: 1669797394120
-Saki: 0.9594634175300598; false
-Saki: 0.9594634175300598; false
-Saki: 0.9594634175300598; false
-Saki: 0.9594634175300598; false
-WEAPON: 3; weaponA 3; weaponB: 1; foundA: 1; foundB: 3
-You've swapped to Tsubasa
-Tsubasa: 0.9964817762374878; true
-Swap Diff: 1669797396555
-Tsubasa: 0.9964818358421326; true
-Tsubasa: 0.9964768290519714; true
-Tsubasa: 0.996484637260437; true
-Tsubasa: 0.9964814782142639; true
-Tsubasa: 0.9964809417724609; true
-Tsubasa: 0.9964759945869446; true
-Tsubasa: 0.9964819550514221; true
-Tsubasa: 0.9964806437492371; true
-Tsubasa: 0.996475338935852; true
+Initialized Weapon 2 to 3
+Resetting the weapon config.
+Initialized Weapon 2 to 3
+Resetting the weapon config.
+Initialized Weapon 2 to 3
+Resetting the weapon config.
+Initialized Weapon 2 to 3
+Resetting the weapon config.
+Initialized Weapon 2 to 3
+Resetting the weapon config.
+Initialized Weapon 1 to 2
+Initialized Weapon 2 to 3
+WEAPON: 3; weaponA 2; weaponB: 3; foundA: 2; foundB: 3
+Looks like Claudia is weapon #3
+Claudia: 0.991465151309967; true
+Swap Diff: 1669804406065
+Claudia: 0.9914587736129761; true
+Claudia: 0.991721510887146; true
+Claudia: 0.9919272661209106; true
+Claudia: 0.8993729948997498; false
+Claudia: 0.9064380526542664; false
+Claudia: 0.9556170701980591; false
+Claudia: 0.9907447099685669; true
+Claudia: 0.944692850112915; false
+WEAPON: 1; weaponA 2; weaponB: 3; foundA: 1; foundB: 3
+Looks like Lin is weapon #1
+Lin: 0.9903579950332642; true
+Swap Diff: 1669804410716
+Lin: 0.9917994141578674; true
+Lin: 0.9921472072601318; true
+Lin: 0.9883442521095276; false
+Lin: 0.8608466386795044; false
+Lin: 0.8436256051063538; false
+Lin: 0.863720178604126; false
+Lin: 0.875579297542572; false
+Lin: 0.8746057152748108; false
+Lin: 0.866470456123352; false
+Lin: 0.8773293495178223; false
+Lin: 0.8746511340141296; false
+Lin: 0.872820258140564; false
+Lin: 0.8705427050590515; false
+Lin: 0.8708067536354065; false
+Lin: 0.8861600160598755; false
+Lin: 0.8600271940231323; false
+Lin: 0.8723393678665161; false
+Lin: 0.9017028212547302; false
+Lin: 0.8770918846130371; false
+Lin: 0.8743265271186829; false
+Lin: 0.868644654750824; false
+Lin: 0.8663685321807861; false
+Lin: 0.8687838315963745; false
+Lin: 0.8650540113449097; false
+Lin: 0.8646869659423828; false
+Lin: 0.8595659732818604; false
+Lin: 0.8595297336578369; false

@@ -80,7 +80,7 @@ public class MainDriver {
 		COCO("Coco", "Healing Bee timer and A3 buff timer", "coco.png", 60, Resolution.ACTIVE_COOLDOWN, 0.99),
 		KING("King", "Flaming Scythe timer", "king.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
 		CROW("Crow", "Discharge timer", "crow.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
-		FRIGG("Frigg", "Ice Domain", "frigg.png", 45, Resolution.ACTIVE_COOLDOWN, 0.999),
+		FRIGG("Frigg", "Ice Domain", "frigg.png", 45, Resolution.ACTIVE_COOLDOWN, 0.992),
 		LIN("Lin", "Moonlight Realm time and discharge count for A6", "lin.png", 30, Resolution.ACTIVE_COOLDOWN, 0.99),
 
 		WEAPON1("Weapon 1", "", Resolution.WEAPON_1),

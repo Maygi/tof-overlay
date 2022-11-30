@@ -1,5 +1,5 @@
 # tof-overlay
-This is an overlay designed to run with **Tower of Fantasy** in the background, that parses useful combat information using the [Sikuli API](http://doc.sikuli.org/). It collects data by essentially taking screenshots and looking for text or images - no intrusive memory reading or packet sniffing included!
+This is an overlay designed to run with **Tower of Fantasy** in the background, that parses useful combat information using the [Sikuli API](http://doc.sikuli.org/). It collects data by essentially taking screenshots and looking for text or images - no intrusive memory reading or packet sniffing included! It is a [repurpose for a parser I wrote for Maplestory2](https://github.com/Maygi/ms2combatanalyzer).
 
 ![The TOF Overlay](https://cdn.discordapp.com/attachments/549708292423811074/1047454023881592912/image.png)
 
@@ -7,7 +7,7 @@ This is an overlay designed to run with **Tower of Fantasy** in the background, 
 Check the [releases](https://github.com/Maygi/tof-overlay/releases) page to see a list of releases and the relevant update notes.
 
 # Is it legal?
-It should be fine (keyword: should). This doesn't do anything more than analyze some pixels on the screen, it's no more intrusive than software such as OBS.
+It should be fine (keyword: should). This doesn't do anything more than attempt to recognize images/text on the screen, it's no more intrusive than software such as OBS.
 
 # How to use
 Currently, the TOF Overlay requires that you play in fullscreen mode. Due to how it collects data, note that obstructing your UI at any time may lead to inaccurate results.
@@ -21,10 +21,13 @@ To run the TOF Overlay, just follow these steps:
 5. Drag the window to wherever you would like, and leave it running. That's it!
 
 **Calibration**
+
 To help calibrate your weapon setup, it's recommended to stand somewhere where the bottom-right corner of your screen is in a dark area. Swap to each of your three weapons, and they should appear on the overlay. If an incorrect weapon shows up, click the reset button to reset the overlay.
+
 ![The weapon UI in-game](https://cdn.discordapp.com/attachments/549708292423811074/1047454158850117672/image.png)
 
 *Not working?*
+
 Scroll to the bottom for some common mistakes that people make~
 
 # Features
@@ -54,6 +57,8 @@ Scroll to the bottom for some common mistakes that people make~
 
 ![Aberration](https://cdn.discordapp.com/attachments/549708292423811074/1047450104111575061/aberration.png)
 * Lin - keeps track of Moonlight Realm timer, as well as Discharge counter for extra skill use (A6)
+
+**Misc**
 
 * Sound triggers
   * When any cooldown is ready
