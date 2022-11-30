@@ -61,7 +61,7 @@ public class MainDriver {
 		CLAUDIA("Claudia", "Buff duration", "claudia.png", 15, Resolution.ACTIVE_COOLDOWN, 0.99),
 
 		CHAKRAM("Chakram of the Seas", "chakram.png", Resolution.ACTIVE_WEAPON, 0.98),
-		SHIRO("Shiro", "Full Bloom timer", "shiro.png", 45, Resolution.ACTIVE_COOLDOWN, 0.99),
+		SHIRO("Shiro", "Full Bloom timer", "shiro.png", 45, Resolution.ACTIVE_COOLDOWN, 0.98),
 
 		VENUS("Venus", "venus.png", Resolution.ACTIVE_WEAPON, 0.98),
 		NEMESIS("Nemesis", "Electrode gauge", "nemesis.png", 25, Resolution.ACTIVE_COOLDOWN, 0.99),

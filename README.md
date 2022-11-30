@@ -1,7 +1,7 @@
 # tof-overlay
 This is an overlay designed to run with **Tower of Fantasy** in the background, that parses useful combat information using the [Sikuli API](http://doc.sikuli.org/). It collects data by essentially taking screenshots and looking for text or images - no intrusive memory reading or packet sniffing included!
 
-![The TOF Overlay](https://prnt.sc/DZHOwCDhRczD)
+![The TOF Overlay](https://cdn.discordapp.com/attachments/549708292423811074/1047454023881592912/image.png)
 
 # Recent Updates
 Check the [releases](https://github.com/Maygi/tof-overlay/releases) page to see a list of releases and the relevant update notes.
@@ -22,7 +22,7 @@ To run the TOF Overlay, just follow these steps:
 
 **Calibration**
 To help calibrate your weapon setup, it's recommended to stand somewhere where the bottom-right corner of your screen is in a dark area. Swap to each of your three weapons, and they should appear on the overlay. If an incorrect weapon shows up, click the reset button to reset the overlay.
-![The weapon UI in-game](https://prnt.sc/lEFc17ajDXbi)
+![The weapon UI in-game](https://cdn.discordapp.com/attachments/549708292423811074/1047454158850117672/image.png)
 
 *Not working?*
 Scroll to the bottom for some common mistakes that people make~
