@@ -135,6 +135,7 @@ public class OverlayFrame extends AbstractFrame {
 	            	if (compact) //we need this for click for some reason
 	            		coords[1] += OverlayFrame.HEIGHT / 2 - OverlayFrame.COMPACT_HEIGHT / 2;
 					if (System.currentTimeMillis() - MainDriver.lastActivity <= 15000 && !ev.isShiftDown()) {
+						MainDriver.setClickAttempt();
 						break;
 					}
 	                if (x >= coords[0] && x <= coords[0] +  b.getWidth()  &&
@@ -189,13 +190,6 @@ public class OverlayFrame extends AbstractFrame {
 	            	int[] coords = b.getCoords();
 	                if (x >= coords[0] && x <= coords[0] + b.getWidth() &&
 	                		y >= coords[1] && y <= coords[1] + b.getHeight()) {
-	                	if (!hover) {
-	                    	if (b.getImage().contains("pause") && !MainDriver.active) {
-	                    		//discrete logic (^:
-	                    	} else {
-	                    		//Sound.HOVER.play();
-	                    	}
-	                	}
 	                	myChart.repaint();
 	                	hover = true;
 	                	hit = true;

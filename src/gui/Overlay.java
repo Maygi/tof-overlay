@@ -48,23 +48,11 @@ public class Overlay extends AbstractLabel {
     };
     
     
-    private static final TrackPoint[] PERSONAL = {
+    private static final TrackPoint[] TRACKPOINTS = {
 			TrackPoint.CLAUDIA, TrackPoint.SHIRO, TrackPoint.NEMESIS, TrackPoint.SAKI, TrackPoint.TSUBASA,
 			TrackPoint.SAMIR, TrackPoint.ZERO, TrackPoint.RUBY, TrackPoint.MERYL,
 			TrackPoint.COBALT, TrackPoint.COCO, TrackPoint.KING,
 			TrackPoint.CROW, TrackPoint.FRIGG, TrackPoint.LIN
-    };
-    
-    private static final TrackPoint[] RAID = {
-    };
-    
-    private static final TrackPoint[] BUFFS = {
-    };
-    
-    private static final TrackPoint[] DEBUFFS = {
-    };
-    
-    private static final TrackPoint[] MISC = {
     };
     
     private JFrame myFrame;
@@ -182,6 +170,11 @@ public class Overlay extends AbstractLabel {
 	        /*drawText(g2d, "Cooldowns", FONT_SIZE, MARGIN,
 	                (int) (getSize().getHeight() * TEXT_PERCENT) - 30, 1,
 	                Color.WHITE, SHADOW_COLOR.darker());*/
+			if (MainDriver.recentlyClicked()) {
+				drawNormalTextCentered(g2d, "(hold shift to click in combat)", (int)(FONT_SIZE * 0.6), getWidth() / 2,
+						45, 1,
+						Color.WHITE, SHADOW_COLOR.darker());
+			}
 	        int line = 1;
 			String text = "";
 			String text2 = "";
@@ -215,8 +208,8 @@ public class Overlay extends AbstractLabel {
 						32, 1,
 						Color.WHITE, SHADOW_COLOR.darker());
 			}
-	        for (int i = 0; i < PERSONAL.length; i++) {
-		        DataCollection dc = MainDriver.data.get(PERSONAL[i]);
+	        for (int i = 0; i < TRACKPOINTS.length; i++) {
+		        DataCollection dc = MainDriver.data.get(TRACKPOINTS[i]);
 		        try {
 					if (dc instanceof CountCollection) {
 						if (!dc.isActive())
@@ -310,10 +303,10 @@ public class Overlay extends AbstractLabel {
 					e.printStackTrace();
 		        	continue;
 		        }
-				if (PERSONAL[i].getName().contains("SP Ef")) {
+				if (TRACKPOINTS[i].getName().contains("SP Ef")) {
 					image = "images/tableicons/spirit.png";
 				} else { //personal buff or debuff
-					image = PERSONAL[i].getIcon();
+					image = TRACKPOINTS[i].getIcon();
 					//if (dc.getLastInt() <= 0) //don't show other class properties
 					//	continue;
 				}
@@ -471,7 +464,7 @@ public class Overlay extends AbstractLabel {
 						break;
 				}
 
-	            replaceTooltip(PERSONAL[i], x, y);
+	            replaceTooltip(TRACKPOINTS[i], x, y);
 				line++;
 	        }
         } else {

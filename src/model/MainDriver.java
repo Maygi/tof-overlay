@@ -43,6 +43,7 @@ public class MainDriver {
 	public static boolean active = false;
 	public static boolean mute = false;
 	private static final long DEFAULT_TIME = -5000000;
+	private static long clickAttempt = 0;
 	private static long pauseTime = DEFAULT_TIME;
 	private static long startTime = DEFAULT_TIME;
 	private static Dimension screenSize = new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
@@ -740,11 +741,6 @@ public class MainDriver {
     		String image = tp.getImage();
     		Match m;
 
-    		/*if (tp.getName().equalsIgnoreCase("Greater Sharp Eyes")) { //special case
-    			if (activeClass != ClassConstants.ARCHER) {
-    				dc = data.get(TrackPoint.SHARPEYES);
-    			}
-    		}*/
     		if (dc instanceof TimeCollection && active) {
     			((TimeCollection) dc).addData(System.currentTimeMillis());
     			continue;
@@ -760,16 +756,9 @@ public class MainDriver {
 						continue;
 					}
 				}
-				/*if (tp.getName().contains("Dodge") && !reverseWeaponMap.containsKey("Tsubasa")) {
-					continue;
-				}*/
 	    		boolean hit;
 	    		if (tp.usesScreen()) {
-					if (tp.getName().contains("Dungeon Complete") && !checkForClear()) {
-						continue;
-					}
 	    			m = s.exists(image, 0.01);
-
 	    		} else {
 	    			//int[] region = tp.getRegion();
 	    	        Region r = regionMap.get(tp.getRegionIndex());
@@ -783,7 +772,6 @@ public class MainDriver {
 		    		}
 	    		}
 				hit = m != null && m.getScore() >= tp.getThreshold();
-				//if ((tp.getName().startsWith("Saki") || tp.getName().startsWith("Heartstream")) && m != null)
 				if (hit && tp.isWeapon()) {
 					if (!weaponMap.containsKey(currentWeapon) && !reverseWeaponMap.containsKey(tp.getName())) {
 						weaponMap.put(currentWeapon, tp);
@@ -825,14 +813,11 @@ public class MainDriver {
 					if (((HitMissCollection)dc).getTrackPoint() != null) {
 						((DeltaCollection)data.get(((HitMissCollection)dc).getTrackPoint())).handleHit(true);
 					}
-					if (tp.getName().contains("SP Efficiency"))
-						hit = !hit;
-						((HitMissCollection) dc).handleHit(hit);
+					((HitMissCollection) dc).handleHit(hit);
 				}
 				if (dc instanceof CountCollection) {
 					try {
 						if (tp.getDependent() == null) { //cooldown collection
-							//if (((HitMissCollection)data.get(tp.getDependent())).getLastHit())
 							if (weaponMap.get(currentWeapon).getName().equals(tp.getName())) {
 								if (!dc.isActive())
 									dc.setActive(true);
@@ -891,21 +876,6 @@ public class MainDriver {
 			handleDodge();
 		}
 		lastDodge = dodges;
-    	/*for (TrackPoint tp : data.keySet()) {
-    		DataCollection dc = data.get(tp);
-    		if (dc instanceof DeltaCollection) {
-				if (tp.getName().contains("Raid DPS")) {
-					((DeltaCollection) dc).handleHit(true);
-				}
-				if (tp.getName().contains("Damage Amp")) {
-					((DeltaCollection) dc).handleHit(smiteHit);
-				}
-				if (tp.getName().contains("Damage Mit")) {
-					//one shield is 50% mitigation (e.g. 1:1 with current damage delta); two is 80% (so 4x the dmg dealt is mitigated)
-					((DeltaCollection) dc).handleHit(shields > 0, shields == 1 ? 1 : 4);
-				}
-    		}
-    	}*/
     }
 
 	public static void log(String s) {
@@ -1080,6 +1050,14 @@ public class MainDriver {
 
 			}
 		}
+	}
+
+	public static void setClickAttempt() {
+		clickAttempt = System.currentTimeMillis();
+	}
+
+	public static boolean recentlyClicked() {
+		return System.currentTimeMillis() - clickAttempt < 5000;
 	}
 
 	public static int getDischargeCount() {

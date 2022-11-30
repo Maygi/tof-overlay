@@ -10,7 +10,7 @@ import model.MainDriver;
 
 public class VersionCheck {
 	
-	private static final String URL = "https://api.github.com/repos/Maygi/ms2combatanalyzer/tags";
+	private static final String URL = "https://api.github.com/repos/Maygi/tof-overlay/tags";
 
 	private static String streamToString(InputStream inputStream) {
 		Scanner s = new Scanner(inputStream, "UTF-8");
