@@ -25,7 +25,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "1.1";
+	public static final String VERSION = "0.9";
 	
 	private static final int DEFAULT_WIDTH = 1920;
 	private static final int DEFAULT_HEIGHT = 1080;
@@ -781,6 +781,9 @@ public class MainDriver {
 	}
 	public static boolean isShielded() {
 		return shielded;
+	}
+	public static int getWeaponsFound() {
+		return weaponsFound;
 	}
 
 	public static void handleFullCharge() {
