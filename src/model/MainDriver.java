@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
@@ -25,7 +26,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "0.9";
+	public static final String VERSION = "1.2";
 	
 	private static final int DEFAULT_WIDTH = 1920;
 	private static final int DEFAULT_HEIGHT = 1080;
@@ -95,6 +96,7 @@ public class MainDriver {
 		private String text = null;
 		private String lastRead = "";
 		private int textCount = 0;
+		private boolean lastReadValid = false;
 
 		private TrackPoint(String name, String intro, int regionIndex) {
 			this.regionIndex = regionIndex;
@@ -150,6 +152,9 @@ public class MainDriver {
 		public String getLastRead() {
 			return lastRead;
 		}
+		public boolean lastReadValid() {
+			return lastReadValid;
+		}
 		public String getInitialText() {
 			return text;
 		}
@@ -169,8 +174,15 @@ public class MainDriver {
 		}
 
 		public void read(String text) {
-			if (text.length() > 0)
+			if (text.length() > 0) {
 				lastRead = text;
+				if (text.length() > 1)
+					lastReadValid = false;
+				else
+					lastReadValid = true;
+			} else {
+				lastReadValid = false;
+			}
 		}
 		
 		/**
@@ -705,11 +717,13 @@ public class MainDriver {
 					}
 				}
 				if (tp.getName().equalsIgnoreCase("Weapon 2")) {
-					if (determineWeapon() == 0) {
+					if (determineWeapon() == 0 || !tp.lastReadValid() || !TrackPoint.WEAPON1.lastReadValid()) {
 						weaponObscured = true;
 					} else {
 						weaponObscured = false;
 					}
+					if (weaponObscured)
+						log("Weapon is obscured.");
 					//System.out.println("You are on weapon set #" + determineWeapon());
 				}
 				if (tp.getName().equalsIgnoreCase("Queue Pop")) {
@@ -761,8 +775,13 @@ public class MainDriver {
 	}
 
 	public static void log(String s) {
-		logOutput.println(s);
-		System.out.println(s);
+		String timeStamp = new SimpleDateFormat("yyyy/MM/dd [HH:mm:ss]").format(new Date());
+		StringBuilder sb = new StringBuilder();
+		sb.append(timeStamp);
+		sb.append(" ");
+		sb.append(s);
+		logOutput.println(sb);
+		System.out.println(sb);
 	}
 
 	public static void logOnly(String s) {
@@ -1030,7 +1049,7 @@ public class MainDriver {
 				}
 			} catch (Exception e) {
 				currentWeaponTp = null;
-				e.printStackTrace();
+				//e.printStackTrace();
 			}
 
 		}
