@@ -26,7 +26,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "1.3";
+	public static final String VERSION = "1.3.1";
 
 	
 	/**
@@ -181,13 +181,19 @@ public class MainDriver {
 
 		public void read(String text) {
 			if (text.length() > 0) {
-				lastRead = text;
-				if (text.length() > 1)
+				if (text.length() > 1) {
+					if (text.contains(lastRead)) { //close enough
+						lastReadValid = true;
+						return;
+					}
 					lastReadValid = false;
-				else
+					log("Bad read: " + text);
+				} else
 					lastReadValid = true;
+				lastRead = text;
 			} else {
 				lastReadValid = false;
+				log("Bad read: Empty string");
 			}
 		}
 		
@@ -706,6 +712,7 @@ public class MainDriver {
 				}
 				if (tp.getName().equalsIgnoreCase("Weapon 2")) {
 					if (determineWeapon() == 0 || !tp.lastReadValid() || !TrackPoint.WEAPON1.lastReadValid()) {
+						log("Obscured; " + determineWeapon() + ", " + tp.getLastRead() + "; " + TrackPoint.WEAPON1.getLastRead());
 						weaponObscured = true;
 					} else {
 						weaponObscured = false;
