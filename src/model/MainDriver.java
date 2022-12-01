@@ -72,7 +72,7 @@ public class MainDriver {
 		COCO("Coco", "Healing Bee timer and A3 buff timer", "coco.png", 60, Resolution.ACTIVE_SKILL, 0.99),
 		KING("King", "Flaming Scythe timer", "king.png", 45, Resolution.ACTIVE_SKILL, 0.99),
 		CROW("Crow", "Discharge timer", "crow.png", 45, Resolution.ACTIVE_SKILL, 0.99),
-		FRIGG("Frigg", "Ice Domain", "frigg.png", 45, Resolution.ACTIVE_SKILL, 0.992),
+		FRIGG("Frigg", "Ice Domain", "frigg.png", 30, Resolution.ACTIVE_SKILL, 0.992, 0.99),
 		LIN("Lin", "Moonlight Realm time and discharge count for A6", "lin.png", 30, Resolution.ACTIVE_SKILL, 0.99),
 
 
@@ -97,6 +97,7 @@ public class MainDriver {
 		private String lastRead = "";
 		private int textCount = 0;
 		private boolean lastReadValid = false;
+		private double unrecognition = 0.97;
 
 		private TrackPoint(String name, String intro, int regionIndex) {
 			this.regionIndex = regionIndex;
@@ -112,6 +113,15 @@ public class MainDriver {
 			this.cd = cd;
 			this.image = image;
 			this.threshold = threshold;
+		}
+		private TrackPoint(String name, String intro, String image, int cd, int resolutionIndex, double threshold, double unrecognition) {
+			this.regionIndex = resolutionIndex;
+			this.name = name;
+			this.intro = intro;
+			this.cd = cd;
+			this.image = image;
+			this.threshold = threshold;
+			this.unrecognition = unrecognition;
 		}
 		private TrackPoint(String name, String image, int resolutionIndex, double threshold) {
 			this.regionIndex = resolutionIndex;
@@ -247,6 +257,9 @@ public class MainDriver {
 		}
 		public double getThreshold() {
 			return threshold;
+		}
+		public double getUnrecognition() {
+			return unrecognition;
 		}
 		@Override
 		public String toString() {
@@ -684,7 +697,7 @@ public class MainDriver {
 								if (!dc.isActive())
 									dc.setActive(true);
 								//System.out.println("We got a hit on " + currentWeaponTp.getName());
-								if (!hit && m.getScore() * scoreAdjustment <= 0.97) {
+								if (!hit && m.getScore() * scoreAdjustment <= tp.getUnrecognition()) {
 									((CountCollection) dc).handleHit(true, true);
 									lastActivity = System.currentTimeMillis();
 								} else

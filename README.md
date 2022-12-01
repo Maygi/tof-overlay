@@ -18,9 +18,13 @@ To run the TOF Overlay, just follow these steps:
 2. Extract the tof-overlay zip folder.
 3. Open **weapon.properties** with any text editor of choice and update it with the advancements you have. 
 4. Run the **tof-overlay.jar** file.
-5. Drag the window to wherever you would like, and leave it running. That's it!
+5. Drag the window to wherever you would like, and leave it running.
 
 **Calibration**
+
+If you don't have weapon shortcut hints showing, you'll need to turn them on.
+
+![How to turn on Shortcut Hints](https://cdn.discordapp.com/attachments/549708292423811074/1047725194892021850/image.png)
 
 To help calibrate your weapon setup, it's recommended to stand somewhere where the bottom-right corner of your screen is in a dark area. Swap to each of your three weapons, and they should appear on the overlay. If an incorrect weapon shows up, click the reset button to reset the overlay.
 
