@@ -1,6 +1,5 @@
 package model;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,7 +10,6 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
-import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -19,7 +17,6 @@ import org.sikuli.script.*;
 
 import gui.OverlayFrame;
 import gui.GraphFrame;
-import org.sikuli.script.Image;
 import sound.Sound;
 import util.VersionCheck;
 
@@ -29,7 +26,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "1.2";
+	public static final String VERSION = "1.3";
 
 	
 	/**
