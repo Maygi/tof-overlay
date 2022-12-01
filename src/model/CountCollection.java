@@ -176,11 +176,8 @@ public class CountCollection extends DataCollection {
 			}
 			hitProtection = 1;
 			if (additionalCasts > 0 || Math.abs(time - lastCount) / 1000 > countDelay) {
-				if (lastCount != -1) {
-					totalCounts++;
-					if (totalCounts % 5 == 0)
-						MainDriver.sakiCheck();
-				}
+				//if (lastCount != -1) {
+				//}
 				if (additionalCasts > 0) {
 					additionalCasts--;
 				} else
@@ -199,6 +196,12 @@ public class CountCollection extends DataCollection {
 					updateSecondary();
 					if (lastActiveList.size() > 2)
 						lastActiveList.remove(0); //remove first
+				}
+				totalCounts++;
+				if (totalCounts % 5 == 0) {
+					if (MainDriver.sakiCheck()) {
+						totalCounts++; //double count it
+					}
 				}
 				MainDriver.log("Total skill count: " + totalCounts);
 			}
@@ -304,5 +307,6 @@ public class CountCollection extends DataCollection {
 	public void reset() {
 		super.reset();
 		hits = 0;
+		totalCounts = 0;
 	}
 }

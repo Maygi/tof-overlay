@@ -12,5 +12,5 @@ jnativehook-2.2.2.jar
 .idea/modules.xml
 .idea/libraries/jnativehook_2_2_2.xml
 .idea/artifacts/tof_overlay_jar.xml
-log.txt
 weapon.properties
+config.properties

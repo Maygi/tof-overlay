@@ -14,6 +14,9 @@ import org.sikuli.script.Region;
  *
  */
 public class Resolution {
+
+	public static final int DEFAULT_WIDTH = 2560;
+	public static final int DEFAULT_HEIGHT = 1440;
 	
 	/**
 	 * The indexes of certain screen areas.
@@ -31,12 +34,14 @@ public class Resolution {
 	public static final int HP_BAR = 10;
 	
 	private Dimension screenSize;
-	
+
 	private List<Integer[]> regions;
 	private boolean match = false;
 	private boolean initialized = false;
+	private String extraPath = "";
 	
 	public Resolution(Dimension screenSize) {
+		MainDriver.log("Screen size is: " + screenSize.toString());
 		this.screenSize = screenSize;
 		initialize();
 	}
@@ -45,50 +50,15 @@ public class Resolution {
 		return initialized;
 	}
 	
-	/**
-	 * Derives a new set of regions based on a list of points.
-	 * @param points
-	 * @return
-	 */
-	@SuppressWarnings("unused")
-	private List<Integer[]> derive(List<Integer[]> points) {
-		List<Integer[]> toReturn = new ArrayList<Integer[]>();
-		for (int i = 0; i < points.size(); i++) {
-			Integer[] point = points.get(i);
-			Integer[] region = new Integer[4];
-			region[0] = point[0];
-			region[1] = point[1];
-			region[2] = point[0] + sizes.get(i)[0];
-			region[3] = point[1] + sizes.get(i)[1];
-			toReturn.add(region);
-		}
-		return toReturn;
-	}
-	
-	private List<Integer[]> baseRegion, sizes;
-	
-	private int getBossOffset() {
-		if (koreanClient)
-			return 17;
-		return 0;
-	}
-	
-	private boolean koreanClient = false;
+	private List<Integer[]> baseRegion;
 	
 	public void initialize() {
-		//configure 1920x1080 sizes. region sizes should be similar
-        Region clock = new Region(0, 0, 30, 30);
-		/*if (m != null && m.getScore() >= 0.9) {
-			System.out.println("Game client is in focus.");
-		} else {
-			System.out.println("Game client not in focus. Not initializing.");
-			return;
-		}*/
+		//configure 2560x1440 region sizes.
 		
 		initialized = true;
 		System.out.println("Region initialized.");
 		//x, y, x2, y2
-		baseRegion = new ArrayList<Integer[]>();
+		baseRegion = new ArrayList<>();
 
 		//active cooldown
 		baseRegion.add(new Integer[]{(int) (screenSize.getWidth() * (2320.0 / 2560.0)), (int) (screenSize.getHeight() * (1295.0 / 1440.0)),
@@ -128,18 +98,45 @@ public class Resolution {
 		//hp meter
 		baseRegion.add(new Integer[]{(int) (screenSize.getWidth() * (1072.0 / 2560.0)), (int) (screenSize.getHeight() * (1371.0 / 1440.0)),
 				(int) (screenSize.getWidth() * ((1072.0 + 441) / 2560.0)), (int) (screenSize.getHeight() * ((1371.0 + 8) / 1440.0))});
-		
-		sizes = new ArrayList<Integer[]>();
-		for (int i = 0; i < baseRegion.size(); i++) {
-			Integer[] newSize = new Integer[2];
-			newSize[0] = baseRegion.get(i)[2] - baseRegion.get(i)[0];
-			newSize[1] = baseRegion.get(i)[3] - baseRegion.get(i)[1];
-			sizes.add(newSize);
+
+		double defaultProportion = (double)DEFAULT_WIDTH / (double)DEFAULT_HEIGHT;
+		double currentProportion = screenSize.getWidth() / screenSize.getHeight();
+		boolean proportionMatch = currentProportion == defaultProportion;
+		MainDriver.log("Resolution Proportion: " + currentProportion + "; " + proportionMatch);
+		if (screenSize.getWidth() != DEFAULT_WIDTH || screenSize.getHeight() != DEFAULT_HEIGHT) {
+			double scale = screenSize.getHeight() / (double)DEFAULT_HEIGHT;
+			int properWidth = (int)(scale * screenSize.getHeight() * defaultProportion);
+			MainDriver.log("Mismatch detected. Scaling by a base of: " + scale + ". Expected Width: " + properWidth);
+			int xOffset = 0;
+			if (properWidth < (int) screenSize.getWidth()) { //wide-screen. there's no such thing as a tall-screen, right?
+				xOffset += screenSize.getWidth() - properWidth;
+				MainDriver.log("Widescreen detected. Offset: " + xOffset);
+			}
+			for (int i = 0; i < baseRegion.size(); i++) {
+				Integer[] vals = baseRegion.get(i);
+				for (int j = 0; j < vals.length; j++) {
+					vals[j] = (int) ((double) vals[j] / scale);
+					if (j % 2 == 0)
+						vals[j] += xOffset;
+				}
+				baseRegion.set(i, vals);
+				MainDriver.log("Updated Region #" + i + " to: " + Arrays.toString(vals));
+			}
 		}
-		
-		regions = new ArrayList<Integer[]>(); 
-		match = true;
 		regions = baseRegion;
+
+
+		if (screenSize.getHeight() == 1080) {
+			extraPath = "1920x1080/";
+		}
+	}
+
+	/**
+	 * Returns the extraPath. This is an additional path to a folder for Sikuli-match images with a different scale.
+	 * @return A part of a folder path String.
+	 */
+	public String getExtraPath() {
+		return extraPath;
 	}
 	
 	/**
@@ -150,8 +147,12 @@ public class Resolution {
 	public boolean hasMatch() {
 		return match;
 	}
-	
+
 	public Integer[] getRegion(int index) {
 		return regions.get(index);
+	}
+
+	public List<Integer[]> getRegions() {
+		return regions;
 	}
 }

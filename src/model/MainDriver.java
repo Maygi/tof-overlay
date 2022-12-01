@@ -1,5 +1,6 @@
 package model;
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -10,6 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.List;
 
+import javax.imageio.ImageIO;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
@@ -17,6 +19,7 @@ import org.sikuli.script.*;
 
 import gui.OverlayFrame;
 import gui.GraphFrame;
+import org.sikuli.script.Image;
 import sound.Sound;
 import util.VersionCheck;
 
@@ -27,9 +30,7 @@ import util.VersionCheck;
 public class MainDriver {
 	
 	public static final String VERSION = "1.2";
-	
-	private static final int DEFAULT_WIDTH = 1920;
-	private static final int DEFAULT_HEIGHT = 1080;
+
 	
 	/**
 	 * The delay, in milliseconds, before the tracker will automatically restart (when entering combat)
@@ -45,13 +46,13 @@ public class MainDriver {
 	private static long clickAttempt = 0;
 	private static long pauseTime = DEFAULT_TIME;
 	private static long startTime = DEFAULT_TIME;
-	private static Dimension screenSize = new Dimension(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+	private static Dimension screenSize = null;
 	private static Resolution resolution;
 
 	/**
 	 * The TrackPoint enum, which describes several constants for image or text recognition.
 	 * Constructors without images instead look for text within a certain region.
-	 * All x and y coordinates are based on a full screen, 1920x1080 monitor.
+	 * All x and y coordinates are based on a full screen, 2560x1440 monitor.
 	 * It is scaled down or up appropriately in the getRegion local method.
 	 * The coordinates are the values of the upper left / bottom right corners around the region to be viewed for a certain TrackPoint.
 	 */
@@ -72,7 +73,7 @@ public class MainDriver {
 		COCO("Coco", "Healing Bee timer and A3 buff timer", "coco.png", 60, Resolution.ACTIVE_SKILL, 0.99),
 		KING("King", "Flaming Scythe timer", "king.png", 45, Resolution.ACTIVE_SKILL, 0.99),
 		CROW("Crow", "Discharge timer", "crow.png", 45, Resolution.ACTIVE_SKILL, 0.99),
-		FRIGG("Frigg", "Ice Domain", "frigg.png", 30, Resolution.ACTIVE_SKILL, 0.992, 0.99),
+		FRIGG("Frigg", "Ice Domain", "frigg.png", 30, Resolution.ACTIVE_SKILL, 0.99, true),
 		LIN("Lin", "Moonlight Realm time and discharge count for A6", "lin.png", 30, Resolution.ACTIVE_SKILL, 0.99),
 
 
@@ -97,7 +98,8 @@ public class MainDriver {
 		private String lastRead = "";
 		private int textCount = 0;
 		private boolean lastReadValid = false;
-		private double unrecognition = 0.97;
+		private boolean useReadCd = false;
+		private final double unrecognition = 0.975;
 
 		private TrackPoint(String name, String intro, int regionIndex) {
 			this.regionIndex = regionIndex;
@@ -114,14 +116,14 @@ public class MainDriver {
 			this.image = image;
 			this.threshold = threshold;
 		}
-		private TrackPoint(String name, String intro, String image, int cd, int resolutionIndex, double threshold, double unrecognition) {
+		private TrackPoint(String name, String intro, String image, int cd, int resolutionIndex, double threshold, boolean useReadCd) {
 			this.regionIndex = resolutionIndex;
 			this.name = name;
 			this.intro = intro;
 			this.cd = cd;
 			this.image = image;
 			this.threshold = threshold;
-			this.unrecognition = unrecognition;
+			this.useReadCd = useReadCd;
 		}
 		private TrackPoint(String name, String image, int resolutionIndex, double threshold) {
 			this.regionIndex = resolutionIndex;
@@ -138,9 +140,6 @@ public class MainDriver {
 		}
 		public String getIntro() {
 			return intro;
-		}
-		public int getClassIndex() {
-			return classIndex;
 		}
 		public int getCooldown() {
 			try {
@@ -204,6 +203,7 @@ public class MainDriver {
 				return null;
 			StringBuilder sb = new StringBuilder();
 			sb.append("images/sikuli/");
+			sb.append(resolution.getExtraPath());
 			sb.append(image);
 			return sb.toString();
 		}
@@ -240,20 +240,11 @@ public class MainDriver {
 		public int getRegionIndex() {
 			return regionIndex;
 		}
-		public int[] getRegion() {
+		public Integer[] getRegion() {
 			if (regionIndex == -1) {
 				return null;
 			}
-			Integer[] region = resolution.getRegion(regionIndex);
-			int[] toReturn = new int[4];
-			for (int i = 0; i < region.length; i++) {
-				if (resolution.hasMatch())
-					toReturn[i] = region[i];
-				else
-					toReturn[i] = (int)(((double)region[i] / (i % 2 == 0 ? DEFAULT_WIDTH : DEFAULT_HEIGHT)) 
-					* (i % 2 == 0 ? screenSize.getWidth() : screenSize.getHeight()));
-			}
-			return toReturn;
+			return resolution.getRegion(regionIndex);
 		}
 		public double getThreshold() {
 			return threshold;
@@ -261,14 +252,13 @@ public class MainDriver {
 		public double getUnrecognition() {
 			return unrecognition;
 		}
+		public boolean usesReadCd() {
+			return useReadCd;
+		}
 		@Override
 		public String toString() {
 			return name;
 		}
-	}
-	
-	public static TrackPoint getOrigin(TrackPoint tp) {
-		return tp;
 	}
 
 	private static OverlayFrame overlay = new OverlayFrame();
@@ -358,13 +348,15 @@ public class MainDriver {
 			log("IllegalAccessException");
         }
     }
-    
+
     public static Map<TrackPoint, DataCollection> data;
-    public static Map<Integer, List<TrackPoint>> trackPointByRegion;
     public static PrintStream logOutput;
     public static String liveVersion = VERSION;
-    
-    public static void run() throws FileNotFoundException {
+
+	private static Map<Integer, List<TrackPoint>> trackPointByRegion;
+	private static Map<Integer, Region> regionMap;
+
+	public static void run() throws FileNotFoundException {
 		logOutput = new PrintStream(new File("log.txt"));
         long lastLoopTime = System.nanoTime();
         final int TARGET_FPS = 2; //check twice per second
@@ -435,19 +427,15 @@ public class MainDriver {
 		data.put(TrackPoint.DISCHARGE, new HitMissCollection());
 		data.put(TrackPoint.WEAPON_CD, new HitMissCollection());
 
-    	trackPointByRegion = new TreeMap<>();
-    	for (TrackPoint tp : data.keySet()) {
-    		int region = tp.getRegionIndex();
-    		if (trackPointByRegion.get(region) == null) {
-    			List<TrackPoint> list = new ArrayList<TrackPoint>();
-    			list.add(tp);
-    			trackPointByRegion.put(region, list);
-    		} else {
-    			List<TrackPoint> list = trackPointByRegion.get(region);
-    			list.add(tp);
-    			trackPointByRegion.put(region, list);
-    		}
-    	}
+		regionMap = new TreeMap<>();
+		List<Integer[]> regions = resolution.getRegions();
+		for (int i = 0; i < regions.size(); i++) {
+			Integer[] region = regions.get(i);
+			if (region != null) {
+				Region r = new Region(region[0], region[1], region[2] - region[0], region[3] - region[1]);
+				regionMap.put(i, r);
+			}
+		}
     }
     
     /**
@@ -587,15 +575,6 @@ public class MainDriver {
 		shielded = false;
 
 		boolean weaponObscured = false;
-        Map<Integer, Region> regionMap = new TreeMap<Integer, Region>();
-        for (Integer regionId : trackPointByRegion.keySet()) {
-        	List<TrackPoint> list = trackPointByRegion.get(regionId);
-			int[] region = list.get(0).getRegion();
-			if (region != null) {
-		        Region r = new Region(region[0], region[1], region[2] - region[0], region[3] - region[1]);
-		        regionMap.put(regionId, r);
-			}
-        }
 		boolean found = false;
 
     	for (TrackPoint tp : data.keySet()) {
@@ -612,7 +591,6 @@ public class MainDriver {
 					continue;
     			if (!active)
     				continue;
-				boolean weaponExists = false;
 				if (currentWeaponTp != null && weaponsFound == 3 && tp.isWeapon()) {
 					if (!reverseWeaponMap.containsKey(tp.getName())) {
 						continue;
@@ -690,9 +668,9 @@ public class MainDriver {
 					}
 					((HitMissCollection) dc).handleHit(hit);
 				}
-				if (dc instanceof CountCollection) {
+				if (dc instanceof CountCollection && !tp.usesReadCd()) {
 					try {
-						if (tp.getDependent() == null) { //cooldown collection
+						if (tp.isWeapon()) { //cooldown collection
 							if (weaponMap.get(currentWeapon).getName().equals(tp.getName())) {
 								if (!dc.isActive())
 									dc.setActive(true);
@@ -712,7 +690,7 @@ public class MainDriver {
 					}
 				}
     		} else if (tp.getRegion() != null) { //look for text
-    			int[] region = tp.getRegion();
+    			Integer[] region = tp.getRegion();
     	        Region r = new Region(region[0], region[1], region[2] - region[0], region[3] - region[1]);
 				if (tp.getName().equalsIgnoreCase("Current CD"))
 					OCR.globalOptions().variable("tessedit_char_whitelist", "0123456789");
@@ -750,18 +728,38 @@ public class MainDriver {
 					int cd = (int)(((CountCollection)data.get(currentWeaponTp)).getCooldown() / 1000.0);
 
 					int advancement = WeaponConfig.getData().get(currentWeaponTp.getName()).getAdvancement();
-						if (currentWeaponTp.getName().equals("Samir") && advancement >= 6 &&  cd > 0 && text[0].length() > 0) {
-							System.out.println("Parse CD: " + text[0] + "; Real: " + cd);
-							try {
-								int proposedCd = Integer.parseInt(text[0]);
-								if (proposedCd < cd && cd - proposedCd <= 8 && cd - proposedCd > 0) {
-									System.out.println("Advancing CD by " + (cd - proposedCd));
-									((CountCollection)data.get(currentWeaponTp)).advanceCooldown(cd - proposedCd);
-								}
-							} catch (Exception e) {
-								continue;
+
+					System.out.println("Parse CD: " + text[0] + "; Real: " + cd);
+					int proposedCd;
+					try {
+						 proposedCd = Integer.parseInt(text[0]);
+					} catch (Exception e) {
+						proposedCd = -1;
+					}
+					if (currentWeaponTp.getName().equals("Frigg")) { //look what you made me do
+						if (!data.get(currentWeaponTp).isActive())
+							data.get(currentWeaponTp).setActive(true);
+						//System.out.println("Frigg stuff: " + proposedCd + "; " + (((CountCollection)data.get(currentWeaponTp)).getCooldown()));
+						if (proposedCd > 0 && text[0].length() > 0 && (Math.abs(proposedCd - 30) <= 5 ||
+								(((CountCollection)data.get(currentWeaponTp)).getCooldown() > 0 && proposedCd > 0))) {
+							boolean fastForward = false;
+							if (((CountCollection)data.get(currentWeaponTp)).getCooldown() <= 0)
+								fastForward = true;
+							((CountCollection)data.get(currentWeaponTp)).handleHit(true, true);
+							lastActivity = System.currentTimeMillis();
+							if (fastForward) { //account for delays
+								(((CountCollection)data.get(currentWeaponTp))).advanceCooldown(Math.abs(proposedCd - 30));
+								//System.out.println("FF by " + Math.abs(proposedCd - 30));
 							}
+							//System.out.println("HIT???");
+						} else
+							((CountCollection)data.get(currentWeaponTp)).handleHit(false, true);
+					} else if (currentWeaponTp.getName().equals("Samir") && advancement >= 6 &&  cd > 0 && text[0].length() > 0 && proposedCd > 0) {
+						if (proposedCd < cd && cd - proposedCd <= 8 && cd - proposedCd > 0) {
+							System.out.println("Advancing CD by " + (cd - proposedCd));
+							((CountCollection)data.get(currentWeaponTp)).advanceCooldown(cd - proposedCd);
 						}
+					}
 				}
     		}
     	}
@@ -769,7 +767,7 @@ public class MainDriver {
 			log("Resetting the weapon config.");
 			TrackPoint.WEAPON1.reset();
 			TrackPoint.WEAPON2.reset();
-			if (!weaponObscured && highestScore > 0) {
+			if (!weaponObscured && highestScore > 0 && highestScore <= 0.99) {
 				scoreAdjustment = .995 / highestScore;
 				log("Highest score was " + highestScore + "; setting adjustment to " + scoreAdjustment);
 			}
