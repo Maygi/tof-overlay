@@ -628,7 +628,7 @@ public class MainDriver {
 								(m != null ? m.getScore() * scoreAdjustment : "no match") + ")");
 					else
 						logOnly(tp.getName() + ": " + (m != null ? m.getScore() : "no match") + "; " + hit);
-					if (weaponsFound == 0 && m.getScore() > highestScore)
+					if (weaponsFound == 0 && m != null && m.getScore() > highestScore)
 						highestScore = m.getScore();
 				}
 				if (currentWeaponTp != null && currentWeaponTp.getName().equals(tp.getName()) && tp.isWeapon()) {
