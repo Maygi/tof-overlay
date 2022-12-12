@@ -32,6 +32,7 @@ public class CountCollection extends DataCollection {
 	private int extraDuration = 0;
 
 	private int hitProtection = 1;
+	private int reverseHitProtection = 1;
 	private String name;
 
 	private boolean lastHit = false;
@@ -84,8 +85,8 @@ public class CountCollection extends DataCollection {
 	 */
 	public void handleCobaltA6(boolean dodge) {
 		final int INTERVAL = 1500;
-		System.out.println("SECONDARY: " + getSecondary());
-		if (System.currentTimeMillis() - lastExtraActive >= INTERVAL && (dodge || getSecondary() > 0)) {
+		System.out.println("SECONDARY: " + getSecondary() + "; burn active: " + (System.currentTimeMillis() - lastActive <= 10000));
+		if (System.currentTimeMillis() - lastExtraActive >= INTERVAL && (dodge || System.currentTimeMillis() - lastActive <= 10000)) {
 			lastExtraActive = System.currentTimeMillis();
 			advanceCooldown(4);
 		}
@@ -175,6 +176,7 @@ public class CountCollection extends DataCollection {
 				return;
 			}
 			hitProtection = 1;
+			reverseHitProtection = 1;
 			if (additionalCasts > 0 || Math.abs(time - lastCount) / 1000 > countDelay) {
 				//if (lastCount != -1) {
 				//}
@@ -208,9 +210,18 @@ public class CountCollection extends DataCollection {
 		}
 		if (!hit) {
 			hitProtection = 1;
-			if (getCooldown() <= 44000 && getCooldown() >= 0 && active && lastHit) { //cooldown was reset!
+			if (active)
+				reverseHitProtection--;
+			if (getCooldown() <= 44000 && getCooldown() >= 1000 && active && lastHit) { //cooldown was reset!
 				//lastCount = 0;
 				MainDriver.shiroCheck();
+			}
+			if (reverseHitProtection <= 0 && active) {
+				reverseHitProtection = 1;
+				if (getCooldown() > 0) { //it's clearly not on cooldown
+					MainDriver.log(name + " was reported to be on cooldown, but was found anyway");
+					resetCooldown();
+				}
 			}
 		}
 		addData(new BigInteger(Integer.toString(hits)));

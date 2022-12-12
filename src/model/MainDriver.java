@@ -26,7 +26,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "1.3.1";
+	public static final String VERSION = "1.4";
 
 	
 	/**
@@ -384,6 +384,7 @@ public class MainDriver {
             if(lastFpsTime >= 1000000000){
                 lastFpsTime = 0;
             }
+			//System.out.println("Tick: " + (System.currentTimeMillis() - lastTick));
 			if (System.currentTimeMillis() - lastTick >= 50) {
 				lastTick = System.currentTimeMillis();
 				tick();
@@ -684,7 +685,7 @@ public class MainDriver {
 								} else
 									((CountCollection) dc).handleHit(false, true);
 							} else { //if no weapon match, we don't count
-								((CountCollection) dc).handleHit(false);
+								((CountCollection) dc).handleHit(false, false);
 							}
 						} else
 							((CountCollection) dc).handleHit(hit);
@@ -740,25 +741,26 @@ public class MainDriver {
 					} catch (Exception e) {
 						proposedCd = -1;
 					}
-					if (currentWeaponTp.getName().equals("Frigg")) { //look what you made me do
+					//if (currentWeaponTp.getName().equals("Frigg")) { //look what you made me do
 						if (!data.get(currentWeaponTp).isActive())
 							data.get(currentWeaponTp).setActive(true);
 						//System.out.println("Frigg stuff: " + proposedCd + "; " + (((CountCollection)data.get(currentWeaponTp)).getCooldown()));
-						if (proposedCd > 0 && text[0].length() > 0 && (Math.abs(proposedCd - 30) <= 5 ||
+						if (proposedCd > 0 && text[0].length() > 0 && (Math.abs(proposedCd - currentWeaponTp.getCooldown()) <= 5 ||
 								(((CountCollection)data.get(currentWeaponTp)).getCooldown() > 0 && proposedCd > 0))) {
 							boolean fastForward = false;
 							if (((CountCollection)data.get(currentWeaponTp)).getCooldown() <= 0)
 								fastForward = true;
-							((CountCollection)data.get(currentWeaponTp)).handleHit(true, true);
+							if (currentWeaponTp.usesReadCd())
+								((CountCollection)data.get(currentWeaponTp)).handleHit(true, true);
 							lastActivity = System.currentTimeMillis();
 							if (fastForward) { //account for delays
-								(((CountCollection)data.get(currentWeaponTp))).advanceCooldown(Math.abs(proposedCd - 30));
-								//System.out.println("FF by " + Math.abs(proposedCd - 30));
+								(((CountCollection)data.get(currentWeaponTp))).advanceCooldown(Math.abs(proposedCd - currentWeaponTp.getCooldown()));
+								System.out.println("FF by " + Math.abs(proposedCd - currentWeaponTp.getCooldown()));
 							}
 							//System.out.println("HIT???");
-						} else
+						} else if (currentWeaponTp.usesReadCd())
 							((CountCollection)data.get(currentWeaponTp)).handleHit(false, true);
-					} else if (currentWeaponTp.getName().equals("Samir") && advancement >= 6 &&  cd > 0 && text[0].length() > 0 && proposedCd > 0) {
+					/*} else*/ if (currentWeaponTp.getName().equals("Samir") && advancement >= 6 &&  cd > 0 && text[0].length() > 0 && proposedCd > 0) {
 						if (proposedCd < cd && cd - proposedCd <= 8 && cd - proposedCd > 0) {
 							System.out.println("Advancing CD by " + (cd - proposedCd));
 							((CountCollection)data.get(currentWeaponTp)).advanceCooldown(cd - proposedCd);
@@ -1014,10 +1016,19 @@ public class MainDriver {
 		if (reverseWeaponMap.containsKey("Saki") &&
 				WeaponConfig.getData().get("Saki").getAdvancement() >= 1) {
 			log("Attempting to Saki reset");
-			resetAllSkills();
+			resetAllSkillsExceptCurrent();
 			return true;
 		}
 		return false;
+	}
+
+	public static void resetAllSkillsExceptCurrent() {
+		for (TrackPoint tp : data.keySet()) {
+			DataCollection dc = data.get(tp);
+			if (reverseWeaponMap.containsKey(tp.getName()) && !tp.getName().equals(currentWeaponTp.getName()))
+				((CountCollection) dc).resetCooldown();
+		}
+		overlay.repaint();
 	}
 
 	public static void resetAllSkills() {

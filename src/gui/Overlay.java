@@ -384,7 +384,7 @@ public class Overlay extends AbstractLabel {
 							6, 1);
 				}
 	            drawImage(theGraphics, image, x, y, 0.5);
-				if (((CountCollection)dc).getAdditionalCasts() > 0) {
+				if (WeaponConfig.getData().get("Lin").getAdvancement() >= 6 && ((CountCollection)dc).getAdditionalCasts() > 0) {
 					drawArc(theGraphics, x + 10, y + 10, 44, 44, 360, Color.GREEN.brighter(),
 							4, 0.8f);
 				}

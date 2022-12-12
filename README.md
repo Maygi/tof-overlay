@@ -17,8 +17,9 @@ To run the TOF Overlay, just follow these steps:
 1. Go to the [releases](https://github.com/Maygi/tof-overlay/releases) and download the latest version at the bottom. It will be a .zip or .gz file.
 2. Extract the tof-overlay zip folder.
 3. Open **weapon.properties** with any text editor of choice and update it with the advancements you have. 
-4. Run the **tof-overlay.jar** file.
+4. Run the **tof-overlay.jar** file, or the **run.bat** file (better for debugging).
 5. Drag the window to wherever you would like, and leave it running.
+6. Turn on Weapon Shortcut Hints. (see below)
 
 **Calibration**
 
@@ -84,7 +85,10 @@ Scroll to the bottom for some common mistakes that people make~
 
 *If the overlay is collecting no data...*
 * Are you in fullscreen? It only works in fullscreen :c
-* Is your resolution 2560x1440? It's currently optimized for this only.
 
 * Did you download the entire folder? You'll need the resource folders - namely, lib, fonts, images, and sound - to get the overlay to work properly. tof-overlay.jar should be in a folder outside those.
 * Did you open it with Java? Some people have jar folders to open with WinZip by default. Right-click the .jar file and make sure to open with Java. If you don't have it, you can [download it from the Oracle website.](https://www.java.com/en/download/)
+
+*If it doesn't open...*
+ * If the command prompt from Run.bat closes instantly upon opening, it's probably because you don't have [Java](https://www.java.com/en/download/)!
+ * Check the config.properties file and reset the x and y coordinates to 0 if the app runs but you can't see it.

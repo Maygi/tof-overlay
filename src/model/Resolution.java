@@ -128,6 +128,9 @@ public class Resolution {
 		if (screenSize.getHeight() == 1080) {
 			extraPath = "1920x1080/";
 		}
+		if (screenSize.getHeight() == 2160) {
+			extraPath = "3840x2160/";
+		}
 	}
 
 	/**
