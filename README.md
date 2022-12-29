@@ -46,11 +46,14 @@ Scroll to the bottom for some common mistakes that people make~
 ![Physical](https://cdn.discordapp.com/attachments/549708292423811074/1047449489230807091/grievous.png)
 * Claudia - keeps track of A1 buff timer (refreshed upon Skill or Discharge)
 * Shiro - keeps track of Full Bloom timer
+* Lyra (DPS) - keeps track of Enlightenment mark timer
+* Lyra (Benediction) - keeps track of Enlightenment mark, blade cooldown including charges, total blades on-field, and the time before the first blade expires
 
 ![Volt](https://cdn.discordapp.com/attachments/549708292423811074/1047449490610720848/electrocute.png)
 * Nemesis - keeps track of Electrodes - added through Skill (A1+) or Discharge, as well as Electrode count (A6)
 * Crow - keeps track of Discharge timer 
 * Samir - A6 cooldown is updated constantly by checking on-screen values
+* Tian Lang - keeps track of Volt sense timer
 
 ![Flame](https://cdn.discordapp.com/attachments/549708292423811074/1047449490187104267/burn.png)
 * Ruby - keeps track of estimated detonation timing
@@ -84,10 +87,13 @@ Scroll to the bottom for some common mistakes that people make~
 # HELP! IT'S NOT WORKING!
 
 *If the overlay is collecting no data...*
-* Are you in fullscreen? It only works in fullscreen :c
+* Are you in fullscreen? It only works in fullscreen, and is supported in 1080p/1440p.
 
 * Did you download the entire folder? You'll need the resource folders - namely, lib, fonts, images, and sound - to get the overlay to work properly. tof-overlay.jar should be in a folder outside those.
 * Did you open it with Java? Some people have jar folders to open with WinZip by default. Right-click the .jar file and make sure to open with Java. If you don't have it, you can [download it from the Oracle website.](https://www.java.com/en/download/)
+
+*Are you using a controller?*
+* The parser works by reading your current skill key configuration. You can do a workaround by making a controller layout on Steam and assign the controller buttons to the KBM inputs.
 
 *If it doesn't open...*
  * If the command prompt from Run.bat closes instantly upon opening, it's probably because you don't have [Java](https://www.java.com/en/download/)!

@@ -478,6 +478,8 @@ public class Overlay extends AbstractLabel {
 						break;
 				}
 				int skillChargeMax = Math.max(((CountCollection)dc).getExtraCasts(), ((CountCollection)dc).getSkillCharges());
+				if (WeaponConfig.getData().get("Lin").getAdvancement() >= 6)
+					skillChargeMax += 1;
 				for (int j = 0; j < skillChargeMax; j++) {
 					drawImage(theGraphics, "images/tableicons/skillcharge.png", x + 4 + 20 * j, y - 2, 1);
 				}
