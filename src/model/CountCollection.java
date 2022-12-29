@@ -33,7 +33,7 @@ public class CountCollection extends DataCollection {
 
 	private int hitProtection = 1;
 	private int reverseHitProtection = 1;
-	private String name;
+	private String name, mainName;
 
 	private boolean lastHit = false;
 
@@ -41,7 +41,19 @@ public class CountCollection extends DataCollection {
 
 	private boolean currentlyActive = false;
 
-	private int additionalCasts = 0;
+	/**
+	 * Extra casts for the skill that are independent of the main cooldown.
+	 * E.G. Lin A6 charges, gained through every 3 Discharge casts.
+	 */
+	private int extraCasts = 0;
+
+	/**
+	 * Skill charges that are tied to the cooldown.
+	 */
+	private int skillCharges = 0;
+	private int maxSkillCharges = 0;
+
+	private boolean trueHit = false;
 	
 	/**
 	 * Standard constructor for a CountCollection.
@@ -63,11 +75,12 @@ public class CountCollection extends DataCollection {
 		hits = 0;
 		countDelay = delay;
 		this.name = name;
+		this.mainName = name;
 		lastSawDelay = 0;
 	}
 
 	/**
-	 * Standard constructor for a CountCollection.
+	 * Constructs a CountCollection with a secondary delay.
 	 */
 	public CountCollection(int delay, int lastSawDelay, String name) {
 		super();
@@ -76,6 +89,20 @@ public class CountCollection extends DataCollection {
 		countDelay = delay;
 		this.lastSawDelay = lastSawDelay;
 		this.name = name;
+		this.mainName = name;
+	}
+
+	/**
+	 * Constructs a CountCollection with a secondary delay and a main name.
+	 */
+	public CountCollection(int delay, int lastSawDelay, String name, String mainName) {
+		super();
+		lastActiveList = new LinkedList<>();
+		hits = 0;
+		countDelay = delay;
+		this.lastSawDelay = lastSawDelay;
+		this.name = name;
+		this.mainName = mainName;
 	}
 
 	/**
@@ -108,10 +135,45 @@ public class CountCollection extends DataCollection {
 		extraDuration = duration;
 	}
 
+	/**
+	 * Updates the time to the first item in the list.
+	 * @param duration
+	 */
+	public void updateExtraToFirstItem(int duration) {
+		final long time = lastActiveList.get(0);
+		lastExtraActive = time;
+		extraDuration = duration;
+	}
+
 	public void updateSecondary() {
 		final long time = System.currentTimeMillis();
 		lastActive = time;
-		lastActiveList.add(time);
+		if (!name.equalsIgnoreCase("Lyra (Bene)"))
+			lastActiveList.add(time);
+	}
+
+	public void setSkillCharges(int amount) {
+		skillCharges = amount;
+	}
+
+	public void setMaxSkillCharges(int amount) {
+		maxSkillCharges = amount;
+	}
+
+	/**
+	 * A flag to count a true hit that doesn't check for consistency.
+	 */
+	public void setTrueHit(boolean hit) {
+		trueHit = hit;
+	}
+
+	public void process() {
+		final long time = System.currentTimeMillis();
+		if (skillCharges < maxSkillCharges && getCooldown() <= 0) {
+			skillCharges++;
+			if (skillCharges < maxSkillCharges)
+				lastCount = time;
+		}
 	}
 
 	public void handleHit(boolean hit, boolean active) {
@@ -153,6 +215,9 @@ public class CountCollection extends DataCollection {
 				case "Frigg":
 				case "Crow":
 				case "Lin":
+				case "Lyra (DPS)":
+				case "Lyra (Bene)":
+				case "Tian":
 					currentlyActive = false;
 					break;
 				case "Ruby":
@@ -171,28 +236,45 @@ public class CountCollection extends DataCollection {
 			activeLastTick = false;
 		}
 		if (hit) {
-			if (hitProtection > 0) {
+			if (hitProtection > 0 && maxSkillCharges == 0 && !trueHit) {
 				hitProtection--;
 				return;
 			}
+			trueHit = false;
 			hitProtection = 1;
 			reverseHitProtection = 1;
-			if (additionalCasts > 0 || Math.abs(time - lastCount) / 1000 > countDelay) {
+			if (skillCharges > 0 || extraCasts > 0 || Math.abs(time - lastCount) / 1000 > countDelay) {
 				//if (lastCount != -1) {
 				//}
-				if (additionalCasts > 0) {
-					additionalCasts--;
+				MainDriver.log("Skill used: " + name);
+				if (skillCharges > 0) {
+					skillCharges--;
+					MainDriver.log("Charges left: " + skillCharges);
+					if (getCooldown() <= 0)
+						lastCount = time; //start the cooldown ticking only if it is not active
+				} else if (extraCasts > 0) {
+					if (getCooldown() <= 0) { //prioritize using cooldown first
+						lastCount = time;
+					} else {
+						extraCasts--;
+					}
 				} else
 					lastCount = time;
 				hits++;
-
-				int advancement = WeaponConfig.getData().get(name).getAdvancement();
+				int advancement = WeaponConfig.getData().get(mainName).getAdvancement();
 				if (name.equals("Shiro") || name.equals("Zero")
-						|| name.equals("Huma") || name.equals("Frigg") || name.equals("Lin"))
+						|| name.equals("Huma") || name.equals("Frigg") || name.equals("Lin")
+						|| name.equals("Lyra (DPS)") || name.equals("Tian"))
 					updateSecondary();
 				if (name.equals("Coco") && advancement >= 3) {
 					lastExtraActive = time;
 					extraDuration = 6;
+				}
+				if ((name.equals("Lyra (Bene)"))) {
+					lastActiveList.add(time);
+					if (lastActiveList.size() > 3)
+						lastActiveList.remove(0); //remove first
+					updateExtraToFirstItem(75);
 				}
 				if ((name.equals("Nemesis") || name.equals("Claudia")) && advancement >= 1) {
 					updateSecondary();
@@ -206,9 +288,11 @@ public class CountCollection extends DataCollection {
 					}
 				}
 				MainDriver.log("Total skill count: " + totalCounts);
+				if (WeaponConfig.hasClaudia4pc(mainName))
+					MainDriver.handleClaudia4pc();
 			}
 		}
-		if (!hit) {
+		if (!hit && maxSkillCharges == 0) {
 			hitProtection = 1;
 			if (active)
 				reverseHitProtection--;
@@ -226,6 +310,19 @@ public class CountCollection extends DataCollection {
 		}
 		addData(new BigInteger(Integer.toString(hits)));
 		lastHit = hit;
+	}
+
+	public int getSecondaryCount(int delay) {
+		long time = System.currentTimeMillis();
+		int count = 0;
+		if (lastActiveList == null)
+			return 0;
+		for (Long l : lastActiveList) {
+			if (time - l <= delay) {
+				count++;
+			}
+		}
+		return count;
 	}
 
 	public int getElectrodeCount() {
@@ -253,17 +350,36 @@ public class CountCollection extends DataCollection {
 	public String getName() {
 		return name;
 	}
+
+	public String getMainName() {
+		return mainName;
+	}
 	
 	public void handleHit(boolean hit) {
 		handleHit(hit, false);
 	}
 
-	public void setAdditionalCasts(int num) {
-		additionalCasts = num;
+	public void increaseExtraCasts(int num) {
+		extraCasts += num;
+	}
+	public void setExtraCasts(int num) {
+		extraCasts = num;
 	}
 
-	public int getAdditionalCasts() {
-		return additionalCasts;
+	public int getExtraCasts() {
+		return extraCasts;
+	}
+	public int getSkillCharges() {
+		return skillCharges;
+	}
+
+	/**
+	 * If a collection uses a skill charge count, we'll use skill charge icons to determine the CD,
+	 * instead of the standard image matching.
+	 * @return
+	 */
+	public int getMaxSkillCharges() {
+		return maxSkillCharges;
 	}
 
 	/**
@@ -281,6 +397,9 @@ public class CountCollection extends DataCollection {
 	 */
 	public void advanceCooldown(int seconds) {
 		lastCount -= seconds * 1000;
+	}
+	public void advanceCooldownMs(int ms) {
+		lastCount -= ms;
 	}
 
 	public int getCountDelay() {

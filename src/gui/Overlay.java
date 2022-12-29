@@ -53,7 +53,9 @@ public class Overlay extends AbstractLabel {
 			TrackPoint.CLAUDIA, TrackPoint.SHIRO, TrackPoint.NEMESIS, TrackPoint.SAKI, TrackPoint.TSUBASA,
 			TrackPoint.SAMIR, TrackPoint.ZERO, TrackPoint.RUBY, TrackPoint.MERYL,
 			TrackPoint.COBALT, TrackPoint.COCO, TrackPoint.KING,
-			TrackPoint.CROW, TrackPoint.FRIGG, TrackPoint.LIN
+			TrackPoint.CROW, TrackPoint.FRIGG, TrackPoint.LIN,
+			TrackPoint.LYRA_DPS, TrackPoint.LYRA_BENE,
+			TrackPoint.TIAN
     };
     
     private JFrame myFrame;
@@ -274,6 +276,15 @@ public class Overlay extends AbstractLabel {
 							case "Lin":
 								buffTimerIcon = "images/tableicons/moonlightrealm.png";
 								break;
+							case "Lyra (DPS)":
+								buffTimerIcon = "images/tableicons/enlightenment.png";
+								break;
+							case "Lyra (Bene)":
+								buffTimerIcon = "images/tableicons/blade.png";
+								break;
+							case "Tian":
+								buffTimerIcon = "images/tableicons/voltsense.png";
+								break;
 							default:
 								break;
 						}
@@ -360,6 +371,17 @@ public class Overlay extends AbstractLabel {
 									textColor2, SHADOW_COLOR.darker());
 						}
 					}
+					if (((CountCollection)dc).getName().equals("Lyra (Bene)")) {
+						drawImage(theGraphics, "images/tableicons/enlightenment.png", x + 64 + MARGIN * 2 + 32 + 16, y + 8);
+						int electrodes = ((CountCollection)dc).getSecondaryCount(75000);
+						drawNormalTextCentered(g2d, "x" + Integer.toString(electrodes), fontSize, x + 64 + MARGIN * 2 + 32,
+								y + 32, 1,
+								electrodes == 0 ? Color.RED : Color.GREEN, SHADOW_COLOR.darker());
+						if (text2.equalsIgnoreCase("Inactive")) {
+							text2 = "0";
+							xOffAdditional = 0;
+						}
+					}
 					drawImage(theGraphics, buffTimerIcon, x + 64 + MARGIN, y + 8);
 					drawNormalTextCentered(g2d, text2, fontSize, (int) getSize().getWidth() - 30 + xOffAdditional,
 							y + 32, 1,
@@ -384,11 +406,11 @@ public class Overlay extends AbstractLabel {
 							6, 1);
 				}
 	            drawImage(theGraphics, image, x, y, 0.5);
-				if (WeaponConfig.getData().get("Lin").getAdvancement() >= 6 && ((CountCollection)dc).getAdditionalCasts() > 0) {
+				/*if (WeaponConfig.getData().get("Lin").getAdvancement() >= 6 && ((CountCollection)dc).getExtraCasts() > 0) {
 					drawArc(theGraphics, x + 10, y + 10, 44, 44, 360, Color.GREEN.brighter(),
 							4, 0.8f);
-				}
-				if (((CountCollection)dc).getAdditionalCasts() == 0 && cd > 0) {
+				}*/
+				if (((CountCollection)dc).getExtraCasts() == 0 && cd > 0) {
 					//drawCircle(theGraphics, x + 4, y + 4, 56, 56, Color.black, 0.2f);
 					fillArc(theGraphics, x + 4, y + 4, 56, 56, 360 - (int)(cdPerc * 360), Color.BLACK,
 							6, 0.3f);
@@ -413,10 +435,11 @@ public class Overlay extends AbstractLabel {
 						break;*/
 					case "Coco":
 					case "Shiro":
+					case "Lyra (Bene)":
 						double timeDelta = (System.currentTimeMillis() - ((CountCollection)dc).getLastExtraActive()) / 1000.0;
 						if (timeDelta < ((CountCollection)dc).getExtraDuration()) {
 							double ratio = 1 - timeDelta / ((CountCollection)dc).getExtraDuration();
-							Color barColor = WeaponData.getColor(((CountCollection)dc).getName());
+							Color barColor = WeaponData.getColor(((CountCollection)dc).getMainName());
 							drawRect(theGraphics, x + 64 + MARGIN, y + 57, (int) (ratio * 110),
 									5, barColor, 1);
 						}
@@ -424,7 +447,7 @@ public class Overlay extends AbstractLabel {
 					case "Meryl":
 						if (WeaponConfig.getData().get("Meryl").getAdvancement() >= 3) {
 							double shieldCd = Math.min(20, 20 - Math.min(20, lastVal + 10));
-							Color barColor = shieldCd == 20 ? new Color(181, 255, 184) : WeaponData.getColor(((CountCollection)dc).getName());
+							Color barColor = shieldCd == 20 ? new Color(181, 255, 184) : WeaponData.getColor(((CountCollection)dc).getMainName());
 							drawRect(theGraphics, x + 64 + MARGIN, y + 57, (int) (shieldCd / 20.0 * 110),
 									5, barColor, 1);
 						}
@@ -433,7 +456,7 @@ public class Overlay extends AbstractLabel {
 						if (WeaponConfig.getData().get("Lin").getAdvancement() >= 6) {
 							int resetCounter = MainDriver.getDischargeCount() % 3;
 							for (int j = 0; j < resetCounter; j++) {
-								Color boxColor = WeaponData.getColor(((CountCollection)dc).getName());
+								Color boxColor = WeaponData.getColor(((CountCollection)dc).getMainName());
 								drawRect(theGraphics, x + 64 + MARGIN + (int) (56.66 * j) + 2, y + 57 + 2, 50,
 										5, boxColor.darker().darker(), 1);
 								drawRect(theGraphics, x + 64 + MARGIN + (int) (56.66 * j), y + 57, 50,
@@ -453,6 +476,10 @@ public class Overlay extends AbstractLabel {
 							}
 						}
 						break;
+				}
+				int skillChargeMax = Math.max(((CountCollection)dc).getExtraCasts(), ((CountCollection)dc).getSkillCharges());
+				for (int j = 0; j < skillChargeMax; j++) {
+					drawImage(theGraphics, "images/tableicons/skillcharge.png", x + 4 + 20 * j, y - 2, 1);
 				}
 
 	            replaceTooltip(TRACKPOINTS[i], x, y);

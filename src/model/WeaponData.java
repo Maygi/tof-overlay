@@ -48,9 +48,11 @@ public class WeaponData {
         elementMap.put("Nemesis", ELEMENT_VOLT);
         elementMap.put("Samir", ELEMENT_VOLT);
         elementMap.put("Crow", ELEMENT_VOLT);
+        elementMap.put("Tian", ELEMENT_VOLT);
 
         elementMap.put("Claudia", ELEMENT_PHYS);
         elementMap.put("Shiro", ELEMENT_PHYS);
+        elementMap.put("Lyra", ELEMENT_PHYS);
 
         elementMap.put("Lin", ELEMENT_ABER);
 

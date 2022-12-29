@@ -32,6 +32,8 @@ public class Resolution {
 	public static final int DODGE3 = 8;
 	public static final int DISCHARGE = 9;
 	public static final int HP_BAR = 10;
+	public static final int SKILL_CHARGES = 11;
+	public static final int DISCHARGE_GLOW = 12;
 	
 	private Dimension screenSize;
 
@@ -97,6 +99,14 @@ public class Resolution {
 		//hp meter
 		baseRegion.add(new Integer[]{1072, 1371,
 				(1072 + 441), (1371 + 8)});
+
+		//skill extra usages
+		baseRegion.add(new Integer[]{2385, 1273,
+				(2385 + 30), (1273 + 91)});
+
+		//true discharge meter
+		baseRegion.add(new Integer[]{2216, 1126,
+				(2216 + 128), (1126 + 133)});
 
 		double defaultProportion = (double)DEFAULT_WIDTH / (double)DEFAULT_HEIGHT;
 		double currentProportion = screenSize.getWidth() / screenSize.getHeight();

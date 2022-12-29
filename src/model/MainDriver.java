@@ -49,8 +49,7 @@ public class MainDriver {
 	/**
 	 * The TrackPoint enum, which describes several constants for image or text recognition.
 	 * Constructors without images instead look for text within a certain region.
-	 * All x and y coordinates are based on a full screen, 2560x1440 monitor.
-	 * It is scaled down or up appropriately in the getRegion local method.
+	 * All x and y coordinates are based on a full screen.
 	 * The coordinates are the values of the upper left / bottom right corners around the region to be viewed for a certain TrackPoint.
 	 */
 	public enum TrackPoint {
@@ -72,16 +71,23 @@ public class MainDriver {
 		CROW("Crow", "Discharge timer", "crow.png", 45, Resolution.ACTIVE_SKILL, 0.99),
 		FRIGG("Frigg", "Ice Domain", "frigg.png", 30, Resolution.ACTIVE_SKILL, 0.99, true),
 		LIN("Lin", "Moonlight Realm time and discharge count for A6", "lin.png", 30, Resolution.ACTIVE_SKILL, 0.99),
+		LYRA_DPS("Lyra (DPS)", "Enlightenment mark time", "lyradps.png", 20, Resolution.ACTIVE_SKILL, 0.99),
+		LYRA_BENE("Lyra (Bene)", "Blade count and time", "lyrabene.png", 20, Resolution.ACTIVE_SKILL, 0.995),
+		TIAN("Tian", "Volt sense", "tian.png", 30, Resolution.ACTIVE_SKILL, 0.99),
 
 
 		WEAPON1("Weapon 1", "", Resolution.WEAPON_1),
 		WEAPON2("Weapon 2", "", Resolution.WEAPON_2),
 		WEAPON_CD("Current CD", "", Resolution.SKILL_COOLDOWN),
 
+		SKILL_CHARGE_3("Skill Charge 3", "3stackskill.png", Resolution.SKILL_CHARGES, 0.99),
+		SKILL_CHARGE_2("Skill Charge 2", "2stackskill.png", Resolution.SKILL_CHARGES, 0.99),
+		SKILL_CHARGE_1("Skill Charge 1", "1stackskill.png", Resolution.SKILL_CHARGES, 0.99),
 		DODGE1("Dodge 1", "dodge.png", Resolution.DODGE1, 0.99),
 		DODGE2("Dodge 2", "dodge.png", Resolution.DODGE2, 0.99),
 		DODGE3("Dodge 3", "dodge.png", Resolution.DODGE3, 0.99),
 		DISCHARGE("Discharge", "discharge.png", Resolution.DISCHARGE, 0.99),
+		DISCHARGE_GLOW("Discharge Glow", "discharge_glow.png", Resolution.DISCHARGE_GLOW, 0.99),
 		SHIELD("Shield", "shield.png", Resolution.HP_BAR, 0.9),
 		QUEUE_POP("Queue Pop", "", Resolution.QUEUE_POP);
 		
@@ -134,6 +140,13 @@ public class MainDriver {
 		}
 		public String getName() {
 			return name;
+		}
+
+		/**
+		 * Returns the first part of the name, which may be separated for disambiguation purposes.
+		 */
+		public String getNameAdjusted() {
+			return name.split(" ")[0];
 		}
 		public String getIntro() {
 			return intro;
@@ -210,6 +223,7 @@ public class MainDriver {
 			sb.append(image);
 			return sb.toString();
 		}
+
 		public String getSecondaryImage() {
 			if (secondaryImage == null)
 				return null;
@@ -234,7 +248,7 @@ public class MainDriver {
 		public String getIcon() {
 			StringBuilder sb = new StringBuilder();
 			sb.append("images/tableicons/");
-			sb.append(image);
+			sb.append(image.replaceAll("bene","").replaceAll("dps",""));
 			return sb.toString();
 		}
 		public boolean usesScreen() {
@@ -406,6 +420,11 @@ public class MainDriver {
 
 		data.put(TrackPoint.SHIELD, new HitMissCollection());
 
+		data.put(TrackPoint.SKILL_CHARGE_3, new HitMissCollection());
+		data.put(TrackPoint.SKILL_CHARGE_2, new HitMissCollection());
+		data.put(TrackPoint.SKILL_CHARGE_1, new HitMissCollection());
+		data.put(TrackPoint.DISCHARGE_GLOW, new HitMissCollection());
+
 		data.put(TrackPoint.CLAUDIA, new CountCollection(TrackPoint.CLAUDIA.getCooldown(), 25, "Claudia"));
 		data.put(TrackPoint.NEMESIS, new CountCollection(TrackPoint.NEMESIS.getCooldown(), 31, "Nemesis"));
 		data.put(TrackPoint.SHIRO, new CountCollection(TrackPoint.SHIRO.getCooldown(), 8, "Shiro"));
@@ -423,6 +442,9 @@ public class MainDriver {
 		data.put(TrackPoint.KING, new CountCollection(TrackPoint.KING.getCooldown(), 10, "King"));
 		data.put(TrackPoint.CROW, new CountCollection(TrackPoint.CROW.getCooldown(), 5, "Crow"));
 		data.put(TrackPoint.LIN, new CountCollection(TrackPoint.LIN.getCooldown(), WeaponConfig.getData().get("Lin").getExtra(), "Lin"));
+		data.put(TrackPoint.LYRA_DPS, new CountCollection(TrackPoint.LYRA_DPS.getCooldown(), 18, "Lyra (DPS)", "Lyra"));
+		data.put(TrackPoint.LYRA_BENE, new CountCollection(TrackPoint.LYRA_BENE.getCooldown(), 18, "Lyra (Bene)", "Lyra"));
+		data.put(TrackPoint.TIAN, new CountCollection(TrackPoint.TIAN.getCooldown(), 25, "Tian"));
 
 		data.put(TrackPoint.QUEUE_POP, new HitMissCollection(Sound.QUEUEPOP, 35));
 		data.put(TrackPoint.DODGE1, new HitMissCollection());
@@ -562,6 +584,7 @@ public class MainDriver {
 	private static int fullChargeType = -1;
 	private static boolean hasDischarge = false;
 	private static boolean shielded = false;
+	private static int lastSkillCharges = 0;
 
 	/**
 	 * Sometimes, the parser will just... not be able to parse some images. This will "upscale" the highest score to .995.
@@ -580,12 +603,16 @@ public class MainDriver {
 
 		boolean weaponObscured = false;
 		boolean found = false;
+		int skillCharges = 0;
 
     	for (TrackPoint tp : data.keySet()) {
     		DataCollection dc = data.get(tp);
     		String image = tp.getImage();
     		Match m;
 
+			if (tp.getName().contains("Skill Charge") && skillCharges > 0) {
+				continue; //no need to continue parsing; a greater value was already found
+			}
     		if (dc instanceof TimeCollection && active) {
     			((TimeCollection) dc).addData(System.currentTimeMillis());
     			continue;
@@ -615,9 +642,20 @@ public class MainDriver {
 		    			m = r.exists(tp.getSecondaryImage(), 0.01);
 		    		}
 	    		}
+				if (tp.isWeapon()) {
+					((CountCollection) dc).process();
+				}
 				hit = m != null && m.getScore() * scoreAdjustment >= tp.getThreshold();
 				if (hit && tp.isWeapon()) {
 					if (currentWeapon != 0 && !weaponMap.containsKey(currentWeapon) && !reverseWeaponMap.containsKey(tp.getName())) {
+						if (tp.getName().equalsIgnoreCase("Lyra (Bene)")) { //special case as this image is too easy to parse
+							if (skillCharges == 0)
+								continue;
+							else {
+								((CountCollection) dc).setSkillCharges(skillCharges);
+								((CountCollection) dc).setMaxSkillCharges(3);
+							}
+						}
 						weaponMap.put(currentWeapon, tp);
 						reverseWeaponMap.put(tp.getName(), currentWeapon);
 						weaponsFound++;
@@ -642,13 +680,26 @@ public class MainDriver {
 					else
 						log(tp.getName() + ": " + (m != null ? m.getScore() : "no match") + "; " + hit);
 				}
+				if (tp.getName().contains("Skill Charge") && hit) {
+					skillCharges = Integer.parseInt(tp.getName().replace("Skill Charge ", ""));
+				}
 				if (tp.getName().contains("Dodge") && hit) {
 					dodges++;
 				}
 				if (tp.getName().contains("Shield") && hit) {
 					shielded = true;
 				}
-				if (tp.getName().contains("Discharge")) {
+				if (tp.getName().equals("Discharge Glow")) {
+
+					if (hit) {
+						if (!hasDischarge) {
+							log("Discharge found.");
+						}
+						hasDischarge = true;
+					} else {
+					}
+				}
+				if (tp.getName().equals("Discharge")) {
 					//System.out.println(tp.getName()+": "+(m != null ? m.getScore() : "no match") +"; "+hit +"; "+lastDischarge);
 					if (lastDischarge && !hit && m != null && m.getScore() * scoreAdjustment <= 0.985) {
 						handleFullCharge();
@@ -672,7 +723,7 @@ public class MainDriver {
 					}
 					((HitMissCollection) dc).handleHit(hit);
 				}
-				if (dc instanceof CountCollection && !tp.usesReadCd()) {
+				if (dc instanceof CountCollection && !tp.usesReadCd() && ((CountCollection) dc).getMaxSkillCharges() == 0) {
 					try {
 						if (tp.isWeapon()) { //cooldown collection
 							if (weaponMap.get(currentWeapon).getName().equals(tp.getName())) {
@@ -732,7 +783,7 @@ public class MainDriver {
 				if (tp.getName().equalsIgnoreCase("Current CD") && currentWeaponTp != null) {
 					int cd = (int)(((CountCollection)data.get(currentWeaponTp)).getCooldown() / 1000.0);
 
-					int advancement = WeaponConfig.getData().get(currentWeaponTp.getName()).getAdvancement();
+					int advancement = WeaponConfig.getData().get(currentWeaponTp.getNameAdjusted()).getAdvancement();
 
 					System.out.println("Parse CD: " + text[0] + "; Real: " + cd);
 					int proposedCd;
@@ -782,6 +833,12 @@ public class MainDriver {
 			handleDodge();
 		}
 		lastDodge = dodges;
+		if (lastSkillCharges - skillCharges == 1 && currentWeaponTp != null) { //if a skill charge has been consumed...
+			log("A skill charge has been consumed. (" + skillCharges + ")");
+			((CountCollection)data.get(currentWeaponTp)).setTrueHit(true);
+			((CountCollection)data.get(currentWeaponTp)).handleHit(true, true);
+		}
+		lastSkillCharges = skillCharges;
 		if (reverseWeaponMap.containsKey("Cobalt") && WeaponConfig.getData().get("Cobalt").getAdvancement() >= 6) {
 			((CountCollection)(data.get(weaponMap.get(reverseWeaponMap.get("Cobalt"))))).handleCobaltA6(false);
 		}
@@ -799,6 +856,10 @@ public class MainDriver {
 		sb.append(s);
 		logOutput.println(sb);
 		System.out.println(sb);
+	}
+
+	public static int getSkillCharges() {
+		return lastSkillCharges;
 	}
 
 	public static void logOnly(String s) {
@@ -825,7 +886,7 @@ public class MainDriver {
 	public static void handleFullCharge() {
 		if (currentWeapon == -1 || weaponMap.get(currentWeapon) == null)
 			return;
-		String name = weaponMap.get(currentWeapon).getName();
+		String name = weaponMap.get(currentWeapon).getNameAdjusted();
 		fullChargeTime = System.currentTimeMillis();
 		fullChargeType = WeaponConfig.getData().get(name).getElement();
 		int advancement = WeaponConfig.getData().get(name).getAdvancement();
@@ -868,18 +929,20 @@ public class MainDriver {
 		boolean update = false;
 		boolean updateExtra = false;
 		int delay = 0;
-		int advancement = WeaponConfig.getData().get(weaponMap.get(currentWeapon).getName()).getAdvancement();
-		log("You've unleashed a Discharge using A" + advancement + " " + weaponMap.get(currentWeapon).getName());
+		int advancement = WeaponConfig.getData().get(weaponMap.get(currentWeapon).getNameAdjusted()).getAdvancement();
+		log("You've unleashed a Discharge using A" + advancement + " " + weaponMap.get(currentWeapon).getNameAdjusted());
 		dischargeCount++;
 		if (reverseWeaponMap.containsKey("Lin")) {
 			if (dischargeCount % 3 == 0) {
 				log("Adding additional Lin cast");
-				((CountCollection)(data.get(weaponMap.get(reverseWeaponMap.get("Lin"))))).setAdditionalCasts(1);
+				((CountCollection)(data.get(weaponMap.get(reverseWeaponMap.get("Lin"))))).increaseExtraCasts(1);
 			}
 		}
 		switch(weaponMap.get(currentWeapon).getName()) {
 			case "Ruby": //discharge procs a detonation
 			case "King":
+			case "Lyra (DPS)":
+			case "Lyra (Bene)":
 				update = true;
 				delay = 1000;
 				break;
@@ -936,7 +999,7 @@ public class MainDriver {
 		String name = null;
 		int advancement = 0;
 		try {
-			name = weaponMap.get(currentWeapon).getName();
+			name = weaponMap.get(currentWeapon).getNameAdjusted();
 			log("You dodged on " + name + ". Now you have: " + lastDodge + " dodges left");
 			advancement = WeaponConfig.getData().get(name).getAdvancement();
 		} catch (Exception e) { //not initialized
@@ -1040,6 +1103,16 @@ public class MainDriver {
 		overlay.repaint();
 	}
 
+	public static void handleClaudia4pc() {
+		log("Claudia 4pc: Fast-forwarded all cooldowns by " + WeaponConfig.getClaudia4PcReduction());
+		for (TrackPoint tp : data.keySet()) {
+			DataCollection dc = data.get(tp);
+			if (reverseWeaponMap.containsKey(tp.getName()))
+				((CountCollection) dc).advanceCooldownMs(WeaponConfig.getClaudia4PcReduction());
+		}
+		overlay.repaint();
+	}
+
 	public static int determineWeapon() {
 		Map<String, Boolean> found = new HashMap<>();
 		String weaponA = TrackPoint.WEAPON1.getInitialText();
@@ -1068,6 +1141,7 @@ public class MainDriver {
 			currentWeapon = toReturn;
 			try {
 				log("You've swapped to " + weaponMap.get(currentWeapon).getName());
+				lastSkillCharges = 0;
 				currentWeaponTp = weaponMap.get(currentWeapon);
 				if (hasDischarge) {
 					handleDischarge();
@@ -1075,9 +1149,8 @@ public class MainDriver {
 				}
 			} catch (Exception e) {
 				currentWeaponTp = null;
-				//e.printStackTrace();
+				e.printStackTrace();
 			}
-
 		}
 		return toReturn;
 	}
