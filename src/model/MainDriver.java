@@ -26,7 +26,7 @@ import util.VersionCheck;
  */
 public class MainDriver {
 	
-	public static final String VERSION = "1.4";
+	public static final String VERSION = "1.5";
 
 	
 	/**
