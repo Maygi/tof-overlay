@@ -218,6 +218,7 @@ public class CountCollection extends DataCollection {
 				case "Lyra (DPS)":
 				case "Lyra (Bene)":
 				case "Tian":
+				case "Alyss":
 					currentlyActive = false;
 					break;
 				case "Ruby":
@@ -264,7 +265,7 @@ public class CountCollection extends DataCollection {
 				int advancement = WeaponConfig.getData().get(mainName).getAdvancement();
 				if (name.equals("Shiro") || name.equals("Zero")
 						|| name.equals("Huma") || name.equals("Frigg") || name.equals("Lin")
-						|| name.equals("Lyra (DPS)") || name.equals("Tian"))
+						|| name.equals("Lyra (DPS)") || name.equals("Tian") || name.equals("Alyss"))
 					updateSecondary();
 				if (name.equals("Coco") && advancement >= 3) {
 					lastExtraActive = time;

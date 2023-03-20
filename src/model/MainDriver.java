@@ -62,6 +62,7 @@ public class MainDriver {
 		ZERO("Zero", "Shield duration", "zero.png", 30, Resolution.ACTIVE_SKILL, 0.99),
 		RUBY("Ruby", "Estimated detonation timer", "ruby.png", 30, Resolution.ACTIVE_SKILL, 0.991),
 		MERYL("Meryl", "Shield timer and cooldown", "meryl.png", 45, Resolution.ACTIVE_SKILL, 0.99),
+		ALYSS("Alyss", "Chilling Field duration", "alyss.png", 25, Resolution.ACTIVE_SKILL, 0.99),
 
 		//wip need new sprite
 		COBALT("Cobalt", "Ionic scorch timer", "cobalt.png", 60, Resolution.ACTIVE_SKILL, 0.99),
@@ -434,6 +435,7 @@ public class MainDriver {
 		data.put(TrackPoint.ZERO, new CountCollection(TrackPoint.ZERO.getCooldown(), 10, "Zero"));
 		data.put(TrackPoint.RUBY, new CountCollection(TrackPoint.RUBY.getCooldown(), 6, "Ruby"));
 		data.put(TrackPoint.MERYL, new CountCollection(TrackPoint.MERYL.getCooldown(), 10, "Meryl"));
+		data.put(TrackPoint.ALYSS, new CountCollection(TrackPoint.ALYSS.getCooldown(), 30, "Alyss"));
 
 		data.put(TrackPoint.COBALT, new CountCollection(TrackPoint.COBALT.getCooldown(), 10, "Cobalt"));
 		//data.put(TrackPoint.HUMA, new CountCollection(TrackPoint.HUMA.getCooldown(), 15, "Huma"));

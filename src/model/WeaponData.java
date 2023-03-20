@@ -38,12 +38,14 @@ public class WeaponData {
         elementMap.put("King", ELEMENT_FIRE);
         elementMap.put("Cobalt", ELEMENT_FIRE);
         elementMap.put("Zero", ELEMENT_FIRE);
+        elementMap.put("Annabella", ELEMENT_FIRE);
 
         elementMap.put("Saki", ELEMENT_ICE);
         elementMap.put("Frigg", ELEMENT_ICE);
         elementMap.put("Coco", ELEMENT_ICE);
         elementMap.put("Tsubasa", ELEMENT_ICE);
         elementMap.put("Meryl", ELEMENT_ICE);
+        elementMap.put("Alyss", ELEMENT_ICE);
 
         elementMap.put("Nemesis", ELEMENT_VOLT);
         elementMap.put("Samir", ELEMENT_VOLT);
